@@ -5,21 +5,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 public class ReadFile {
-	private List<MusicFile> musicFiles = new ArrayList<MusicFile>();
 
 	private String directory = "H:\\旧Dドライブ\\メガフェプス\\2016 大学祭\\メイン１日目";
 
-	public ReadFile() {
+	// directory = "H:\\旧Dドライブ\\メガフェプス\\2016 大学祭\\メイン１日目";
 
+	ReadFile(Main main) {
 		try {
 			File f = null;
 			// ディレクトリ選択ダイアログを表示し、選択したファイルパスを取得
@@ -28,6 +26,8 @@ public class ReadFile {
 			f = dc.showDialog(new Stage());
 			if (f != null) {
 				directory = f.toString();
+			} else {
+				System.out.println("ファイルが選択されていません");
 			}
 
 			// ファイルを読み込む
@@ -43,6 +43,9 @@ public class ReadFile {
 			f = fc.showOpenDialog(new Stage());
 			if (f != null) {
 				csvFile = f;
+				System.out.print("hoge");
+			} else {
+				System.out.println("台本が選択されていません");
 			}
 
 			// SJISを指定
@@ -55,20 +58,20 @@ public class ReadFile {
 				// 区切り文字","で分割する
 				String[] fruit = s.split(",", 0);
 				if (fruit[0].equals("")) {
-					musicFiles.add(new MusicFile("", fruit[1], Integer
+					main.schedules.add(new Schedule("", fruit[1], Integer
 							.parseInt(fruit[2]), Integer.parseInt(fruit[3]),
 							Integer.parseInt(fruit[4]), Integer
 									.parseInt(fruit[5]), Integer
 									.parseInt(fruit[6])));
 				} else {
-					musicFiles.add(new MusicFile(directory + "/" + fruit[0],
+					main.schedules.add(new Schedule(directory + "/" + fruit[0],
 							fruit[1], Integer.parseInt(fruit[2]), Integer
 									.parseInt(fruit[3]), Integer
 									.parseInt(fruit[4]), Integer
 									.parseInt(fruit[5]), Integer
 									.parseInt(fruit[6])));
 				}
-				
+
 			}
 			// 終了処理
 			br.close();
@@ -76,69 +79,7 @@ public class ReadFile {
 		} catch (IOException ex) {
 			// 例外発生時処理
 			ex.printStackTrace();
-			
-		}
-	}
 
-	public List<MusicFile> getMusicFiles() {
-		return musicFiles;
-	}
-
-	public class MusicFile {
-		private String directory;
-		private String fileName;
-		private int startHour;
-		private int startMinute;
-		private int startSecond;
-		private int allottedMinute;
-		private int allottedSecond;
-
-		MusicFile(String directory, String fileName, int startHour,
-				int startMinute, int startSecond, int allottedMinute,
-				int allottedSecond) {
-			this.directory = directory;
-			this.fileName = fileName;
-			this.startHour = startHour;
-			this.startMinute = startMinute;
-			this.startSecond = startSecond;
-			this.allottedMinute = allottedMinute;
-			this.allottedSecond = allottedSecond;
-		}
-
-		public String getDirectry() {
-			return directory;
-		}
-
-		public String getFileName() {
-			return fileName;
-		}
-
-		public void setDirectory(String directory) {
-			this.directory = directory;
-		}
-
-		public void setFileName(String fileName) {
-			this.fileName = fileName;
-		}
-
-		public int getHour() {
-			return startHour;
-		}
-
-		public int getMinute() {
-			return startMinute;
-		}
-
-		public int getSecond() {
-			return startSecond;
-		}
-
-		public int getAllottedMinute() {
-			return allottedMinute;
-		}
-
-		public int getAllottedSecond() {
-			return allottedSecond;
 		}
 	}
 }

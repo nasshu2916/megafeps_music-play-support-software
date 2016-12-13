@@ -2,19 +2,19 @@ package FXsample;
 
 import java.text.DecimalFormat;
 
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Popup;
 
 public class TimeTable {
 	TableView<TimeTableData> table = new TableView<TimeTableData>();
 
-	public Node createtimeTable(Main main) {
+	public Node creatTimeTable(Main main) {
 		// 表ビューを作成
 
 		table.setEditable(false);
@@ -22,30 +22,32 @@ public class TimeTable {
 
 		// 列を追加
 		// PropertyValueFactoryでBeanクラスの対応するプロパティを指定
-		TableColumn<TimeTableData, String> col1 = new TableColumn<TimeTableData, String>(
+		TableColumn<TimeTableData, String> scriptNumber = new TableColumn<TimeTableData, String>(
 				"番号");
-		TableColumn<TimeTableData, String> col2 = new TableColumn<TimeTableData, String>(
+		TableColumn<TimeTableData, String> file = new TableColumn<TimeTableData, String>(
 				"ファイル");
-		TableColumn<TimeTableData, String> col2_1 = new TableColumn<TimeTableData, String>(
+		TableColumn<TimeTableData, String> directryName = new TableColumn<TimeTableData, String>(
 				"ディレクトリパス");
-		TableColumn<TimeTableData, String> col2_2 = new TableColumn<TimeTableData, String>(
+		TableColumn<TimeTableData, String> fileName = new TableColumn<TimeTableData, String>(
 				"ファイル名");
-		TableColumn<TimeTableData, String> col3 = new TableColumn<TimeTableData, String>(
+		TableColumn<TimeTableData, String> startTime = new TableColumn<TimeTableData, String>(
 				"開始時間");
-		TableColumn<TimeTableData, String> col4 = new TableColumn<TimeTableData, String>(
+		TableColumn<TimeTableData, String> allortTime = new TableColumn<TimeTableData, String>(
 				"持ち時間");
-		col1.setCellValueFactory(new PropertyValueFactory<>("element1"));
-		col1.setSortable(false);
-		col2_1.setCellValueFactory(new PropertyValueFactory<>("element2_1"));
-		col2_1.setSortable(false);
-		col2_2.setCellValueFactory(new PropertyValueFactory<>("element2_2"));
-		col2_2.setSortable(false);
-		col3.setCellValueFactory(new PropertyValueFactory<>("element3"));
-		col3.setSortable(false);
-		col4.setCellValueFactory(new PropertyValueFactory<>("element4"));
-		col4.setSortable(false);
-		col2.getColumns().addAll(col2_1, col2_2);
-		table.getColumns().addAll(col1, col3, col4, col2);
+		scriptNumber
+				.setCellValueFactory(new PropertyValueFactory<>("element1"));
+		scriptNumber.setSortable(false);
+		directryName.setCellValueFactory(new PropertyValueFactory<>(
+				"element2_1"));
+		directryName.setSortable(false);
+		fileName.setCellValueFactory(new PropertyValueFactory<>("element2_2"));
+		fileName.setSortable(false);
+		startTime.setCellValueFactory(new PropertyValueFactory<>("element3"));
+		startTime.setSortable(false);
+		allortTime.setCellValueFactory(new PropertyValueFactory<>("element4"));
+		allortTime.setSortable(false);
+		file.getColumns().addAll(directryName, fileName);
+		table.getColumns().addAll(scriptNumber, startTime, allortTime, file);
 
 		// データを追加
 		ObservableList<TimeTableData> data = FXCollections
@@ -53,22 +55,23 @@ public class TimeTable {
 
 		DecimalFormat dformat = new DecimalFormat("00");
 
-		for (int i = 0; i < main.getReadFile().getMusicFiles().size(); i++) {
-			data.add(new TimeTableData(dformat.format(i + 1), main
-					.getReadFile().getMusicFiles().get(i).getDirectry(), main
-					.getReadFile().getMusicFiles().get(i).getFileName(), main
-					.getReadFile().getMusicFiles().get(i).getHour()
-					+ ":"
-					+ dformat.format(main.getReadFile().getMusicFiles().get(i)
-							.getMinute())
-					+ ":"
-					+ dformat.format(main.getReadFile().getMusicFiles().get(i)
-							.getSecond()), main.getReadFile().getMusicFiles()
-					.get(i).getAllottedMinute()
-					+ ":"
-					+ dformat.format(main.getReadFile().getMusicFiles().get(i)
-							.getAllottedSecond())));
+		for (int i = 0; i < main.schedules.size(); i++) {
+			data.add(new TimeTableData(dformat.format(i + 1), main.schedules
+					.get(i).getDirectry(), main.schedules.get(i).getFileName(),
+					main.schedules.get(i).getStartTime().getHour()
+							+ ":"
+							+ dformat.format(main.schedules.get(i)
+									.getStartTime().getMinute())
+							+ ":"
+							+ dformat.format(main.schedules.get(i)
+									.getStartTime().getSecond()),
+					main.schedules.get(i).getAllotTime().getMinute()
+							+ ":"
+							+ dformat.format(main.schedules.get(i)
+									.getAllotTime().getSecond())));
 		}
+
+		
 
 		// データを登録
 		table.setItems(data);

@@ -21,7 +21,7 @@ public class Timecode {
 	private DecimalFormat dformat = new DecimalFormat("00");
 	private Label label;
 
-	public Timecode(Label label) {
+	Timecode(Label label) {
 		Timeline timer = new Timeline(new KeyFrame(Duration.millis(100),
 				new EventHandler<ActionEvent>() {
 					@Override
@@ -42,11 +42,54 @@ public class Timecode {
 		timer.play();
 	}
 
+	Timecode(Label label, String string) {
+		Timeline timer = new Timeline(new KeyFrame(Duration.millis(100),
+				new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						LocalTime time = LocalTime.now();
+						time = time.plus(correctionTime, ChronoUnit.MILLIS);
+						int h = time.getHour(); // 0..23
+						int min = time.getMinute(); // 0..59
+						int sec = time.getSecond(); // 0..59
+						int ms = time.getNano() / 100000000; // 0..999
+						label.setText(string + dformat.format(h) + ":"
+								+ dformat.format(min) + ":"
+								+ dformat.format(sec) + " " + ms);
+						Timecode.this.label = label;
+					}
+				}));
+		timer.setCycleCount(Timeline.INDEFINITE);
+		timer.play();
+	}
+
+	Timecode(Label label, String string, int correctionTime2) {
+		this.correctionTime = correctionTime2;
+		Timeline timer = new Timeline(new KeyFrame(Duration.millis(100),
+				new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						LocalTime time = LocalTime.now();
+						time = time.plus(correctionTime, ChronoUnit.MILLIS);
+						int h = time.getHour(); // 0..23
+						int min = time.getMinute(); // 0..59
+						int sec = time.getSecond(); // 0..59
+						int ms = time.getNano() / 100000000; // 0..999
+						label.setText(string + dformat.format(h) + ":"
+								+ dformat.format(min) + ":"
+								+ dformat.format(sec) + " " + ms);
+						Timecode.this.label = label;
+					}
+				}));
+		timer.setCycleCount(Timeline.INDEFINITE);
+		timer.play();
+	}
+
 	public int getCorrectionTime() {
 		return correctionTime;
 	}
 
-	public void setCorrectionTIme(int CorrectionTIme) {
+	public void setCorrectionTime(int CorrectionTIme) {
 		this.correctionTime = CorrectionTIme;
 	}
 
