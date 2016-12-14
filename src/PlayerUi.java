@@ -1,5 +1,3 @@
-package FXsample;
-
 import java.io.File;
 import java.text.DecimalFormat;
 
@@ -10,11 +8,14 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -401,18 +402,39 @@ public class PlayerUi extends PlayerSystem {
 		EventHandler<ActionEvent> registrationHandler = (e) -> {
 			if (main.schedules.get(Integer.parseInt(textField.getText()) - 1)
 					.getDirectry().equals("")) {
+				// エラーメッセージ
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("エラー");
+				alert.getDialogPane().setContentText("選択した番号は音楽ファイルではありません");
+				alert.show();
 			} else {
 				playIndex = Integer.parseInt(textField.getText()) - 1;
 				setPlayer();
+				newStage.close();
 			}
 		};
 		registrationButton.addEventHandler(ActionEvent.ACTION,
 				registrationHandler);
 
+		EventHandler<KeyEvent> sceneKeyFilter = (event) -> {
+			if (event.getCode().toString() == "ENTER") {
+				if (main.schedules
+						.get(Integer.parseInt(textField.getText()) - 1)
+						.getDirectry().equals("")) {
+				} else {
+					playIndex = Integer.parseInt(textField.getText()) - 1;
+					setPlayer();
+					newStage.close();
+				}
+			}
+		};
+		newStage.addEventFilter(KeyEvent.KEY_PRESSED, sceneKeyFilter);
+
 		hbox.getChildren().addAll(selectLabel, textField, registrationButton);
 		newStage.setScene(scene);
 		newStage.initModality(Modality.APPLICATION_MODAL);
 		newStage.show();
+
 	}
 
 	private void setPlayer() {

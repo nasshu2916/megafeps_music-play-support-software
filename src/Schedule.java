@@ -1,10 +1,11 @@
-package FXsample;
+
 
 public class Schedule {
 	private String directory;
 	private String fileName;
 	private StartTime startTime;
 	private AllotTime allotTime;
+	
 
 	Schedule(String directory, String fileName, int startHour, int startMinute,
 			int startSecond, int allotMinute, int allotSecond) {

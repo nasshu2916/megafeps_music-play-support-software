@@ -1,5 +1,3 @@
-package FXsample;
-
 import java.text.DecimalFormat;
 
 import javafx.collections.FXCollections;
@@ -8,11 +6,13 @@ import javafx.scene.Node;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Popup;
 
 public class TimeTable {
 	TableView<TimeTableData> table = new TableView<TimeTableData>();
+
+	// データを追加
+	ObservableList<TimeTableData> timeTableDatas = FXCollections
+			.observableArrayList();
 
 	public Node creatTimeTable(Main main) {
 		// 表ビューを作成
@@ -49,16 +49,13 @@ public class TimeTable {
 		file.getColumns().addAll(directryName, fileName);
 		table.getColumns().addAll(scriptNumber, startTime, allortTime, file);
 
-		// データを追加
-		ObservableList<TimeTableData> data = FXCollections
-				.observableArrayList();
-
 		DecimalFormat dformat = new DecimalFormat("00");
 
 		for (int i = 0; i < main.schedules.size(); i++) {
-			data.add(new TimeTableData(dformat.format(i + 1), main.schedules
-					.get(i).getDirectry(), main.schedules.get(i).getFileName(),
-					main.schedules.get(i).getStartTime().getHour()
+			timeTableDatas.add(new TimeTableData(dformat.format(i + 1),
+					main.schedules.get(i).getDirectry(), main.schedules.get(i)
+							.getFileName(), main.schedules.get(i)
+							.getStartTime().getHour()
 							+ ":"
 							+ dformat.format(main.schedules.get(i)
 									.getStartTime().getMinute())
@@ -71,14 +68,19 @@ public class TimeTable {
 									.getAllotTime().getSecond())));
 		}
 
-		
-
 		// データを登録
-		table.setItems(data);
+		table.setItems(timeTableDatas);
 
 		table.tableMenuButtonVisibleProperty();
 
 		return table;
+	}
+
+	public TimeTableData setTimeTableData(String number, String directoryPath,
+			String fileName, String StartTime, String allottedTile) {
+
+		return new TimeTableData(number, directoryPath, fileName, StartTime,
+				allottedTile);
 	}
 
 	/**
@@ -94,8 +96,8 @@ public class TimeTable {
 		private String StartTime;
 		private String allottedTime;
 
-		public TimeTableData(String number, String directoryPath,
-				String fileName, String StartTime, String allottedTile) {
+		TimeTableData(String number, String directoryPath, String fileName,
+				String StartTime, String allottedTile) {
 			this.number = number;
 			this.directoryPath = directoryPath;
 			this.fileName = fileName;
@@ -103,6 +105,10 @@ public class TimeTable {
 			this.allottedTime = allottedTile;
 		}
 
+		public void setNumber(String number){
+			this.number = number;			
+		}
+		
 		public String getElement1() {
 			return number;
 		}

@@ -1,4 +1,4 @@
-package FXsample;
+
 
 import javafx.scene.layout.VBox;
 

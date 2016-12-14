@@ -1,5 +1,3 @@
-package FXsample;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +13,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -27,8 +26,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 	public List<Schedule> schedules = new ArrayList<Schedule>();
+
 	private ReadFile readFile = new ReadFile(this);
-	private ContextMenu popup = createPopupMenu();
 
 	private TimeTable timeTable = new TimeTable();
 
@@ -69,79 +68,79 @@ public class Main extends Application {
 		root.getChildren().add(hbox1);
 
 		/* アクションイベント */
-		// EventHandler<KeyEvent> sceneKeyFilter = (event) -> {
-		// System.out.println(event);
-		// switch (event.getCode().toString()) {
-		// case "S":
-		// media1.mediaPlay();
-		// break;
-		// case "ENTER":
-		// media1.mediaPause();
-		// break;
-		// case "DOWN":
-		// media1.pressNext();
-		// break;
-		// case "UP":
-		// media1.pressPrev();
-		// break;
-		// case "SPACE":
-		// if (media1.getMediaPlayer().statusProperty().getValue() ==
-		// Status.PLAYING) {
-		// if (media1.getPlayerIndex() + 1 > getReadFile()
-		// .getMusicFiles().size() - 1) {
-		// media1.pressNext();
-		// } else {
-		// if (getReadFile().getMusicFiles()
-		// .get(media1.getPlayerIndex() + 1).getDirectry()
-		// .equals("")) {
-		// media1.pressNext();
-		// } else {
-		// // フェードアウト
-		// fadeOut = new Timer();
-		// fadeOut.schedule(new FadeOutTask(), 0, 10);
-		// try {
-		// Thread.sleep(1000);
-		// } catch (Exception e) {
-		// }
-		// System.out.println("next2");
-		// media1.pressNext();
-		// media1.mediaPlay();
-		// }
-		// }
-		// } else {
-		// if (getReadFile().getMusicFiles()
-		// .get(media1.getPlayerIndex()).getDirectry()
-		// .equals("")) {
-		// media1.addPlayerIndex();
-		// label2 = setItem(label2, media1.getPlayerIndex());
-		// }
-		// media1.mediaPlay();
-		// }
-		//
-		// break;
-		// case "DIGIT1":
-		// if (media1.samplerButton.isSelected()) {
-		// media1.mediaPlay();
-		// }
-		// break;
-		// case "DIGIT2":
-		// if (media2.samplerButton.isSelected()) {
-		// media2.mediaPlay();
-		// }
-		// break;
-		// case "DIGIT3":
-		// if (media3.samplerButton.isSelected()) {
-		// media3.mediaPlay();
-		// }
-		// break;
-		// case "DIGIT4":
-		// if (media4.samplerButton.isSelected()) {
-		// media4.mediaPlay();
-		// }
-		// break;
-		// }
-		// };
-		// root.addEventFilter(KeyEvent.KEY_PRESSED, sceneKeyFilter);
+		EventHandler<KeyEvent> sceneKeyFilter = (event) -> {
+			System.out.println(event);
+			// switch (event.getCode().toString()) {
+			// case "S":
+			// media1.mediaPlay();
+			// break;
+			// case "ENTER":
+			// media1.mediaPause();
+			// break;
+			// case "DOWN":
+			// media1.pressNext();
+			// break;
+			// case "UP":
+			// media1.pressPrev();
+			// break;
+			// case "SPACE":
+			// if (media1.getMediaPlayer().statusProperty().getValue() ==
+			// Status.PLAYING) {
+			// if (media1.getPlayerIndex() + 1 > getReadFile()
+			// .getMusicFiles().size() - 1) {
+			// media1.pressNext();
+			// } else {
+			// if (getReadFile().getMusicFiles()
+			// .get(media1.getPlayerIndex() + 1).getDirectry()
+			// .equals("")) {
+			// media1.pressNext();
+			// } else {
+			// // フェードアウト
+			// fadeOut = new Timer();
+			// fadeOut.schedule(new FadeOutTask(), 0, 10);
+			// try {
+			// Thread.sleep(1000);
+			// } catch (Exception e) {
+			// }
+			// System.out.println("next2");
+			// media1.pressNext();
+			// media1.mediaPlay();
+			// }
+			// }
+			// } else {
+			// if (getReadFile().getMusicFiles()
+			// .get(media1.getPlayerIndex()).getDirectry()
+			// .equals("")) {
+			// media1.addPlayerIndex();
+			// label2 = setItem(label2, media1.getPlayerIndex());
+			// }
+			// media1.mediaPlay();
+			// }
+			//
+			// break;
+			// case "DIGIT1":
+			// if (media1.samplerButton.isSelected()) {
+			// media1.mediaPlay();
+			// }
+			// break;
+			// case "DIGIT2":
+			// if (media2.samplerButton.isSelected()) {
+			// media2.mediaPlay();
+			// }
+			// break;
+			// case "DIGIT3":
+			// if (media3.samplerButton.isSelected()) {
+			// media3.mediaPlay();
+			// }
+			// break;
+			// case "DIGIT4":
+			// if (media4.samplerButton.isSelected()) {
+			// media4.mediaPlay();
+			// }
+			// break;
+			// }
+		};
+		root.addEventFilter(KeyEvent.KEY_PRESSED, sceneKeyFilter);
 
 		Scene scene = new Scene(root, 1200, 800);
 
@@ -163,15 +162,19 @@ public class Main extends Application {
 
 		// メニューFileを、一般メニューとして作成
 		// 各メニューにはイメージを付与することが可能
-		Menu menu1_1 = new Menu("この番号をプレイヤーにセット");
+		Menu menu1 = new Menu("この番号をプレイヤーにセット");
 		MenuItem menu1_2 = new MenuItem("プレイヤー1");
 		MenuItem menu1_3 = new MenuItem("プレイヤー2");
-		MenuItem menu1_6 = new SeparatorMenuItem();
 		MenuItem menu1_4 = new MenuItem("プレイヤー3");
 		MenuItem menu1_5 = new MenuItem("プレイヤー4");
-		// menu1_3.setDisable(true);
-		menu1_1.getItems().addAll(menu1_2, menu1_3, menu1_4, menu1_5);
-		menu.getItems().addAll(menu1_1, menu1_6);
+		MenuItem menu2 = new SeparatorMenuItem();
+		MenuItem menu3 = new MenuItem("イベント追加");
+		MenuItem menu4 = new MenuItem("イベント削除");
+		// menu1.setDisable(true);
+
+		menu1.getItems().addAll(menu1_2, menu1_3, menu1_4, menu1_5);
+
+		menu.getItems().addAll(menu1, menu2, menu3, menu4);
 		// イベントハンドラはMenuItemに設定
 		menu1_2.addEventHandler(ActionEvent.ACTION, e -> {
 			media1.setPlayer(timeTable.table.getSelectionModel()
@@ -189,8 +192,70 @@ public class Main extends Application {
 			media4.setPlayer(timeTable.table.getSelectionModel()
 					.getSelectedIndex());
 		});
+		menu3.addEventHandler(ActionEvent.ACTION, e -> {
+			setNewEventWindow();
 
+		});
+
+		menu4.addEventHandler(
+				ActionEvent.ACTION,
+				e -> {
+					schedules.remove(timeTable.table.getSelectionModel()
+							.getSelectedIndex());
+					timeTable.timeTableDatas.remove(timeTable.table
+							.getSelectionModel().getSelectedIndex());
+					for (int i = timeTable.table.getSelectionModel()
+							.getSelectedIndex(); i < timeTable.timeTableDatas
+							.size(); i++) {
+						timeTable.timeTableDatas.get(i).setNumber(
+								String.valueOf(i + 1));
+
+					}
+				});
 		return menu;
+	}
+
+	private void setNewEventWindow() {
+		Stage newEvent = new Stage();
+		HBox hboxDirectory = new HBox();
+		HBox hboxFile = new HBox();
+		VBox vbox = new VBox();
+		Scene scene = new Scene(vbox, 300, 200);
+
+		Label directoryLabel = new Label("ディレクトリ");
+		TextField directoryTextField = new TextField();
+
+		Label FileLabel = new Label("ファイル名");
+		TextField FileTextField = new TextField();
+
+		Button registrationButton = new Button("登録");
+
+		EventHandler<ActionEvent> registrationHandler = (e) -> {
+			schedules.add(timeTable.table.getSelectionModel()
+					.getSelectedIndex(), new Schedule(directoryTextField.getText(),
+					FileTextField.getText(), 10, 10, 10, 10, 10));
+			timeTable.timeTableDatas.add(timeTable.table.getSelectionModel()
+					.getSelectedIndex(), timeTable.setTimeTableData(String
+					.valueOf(timeTable.table.getSelectionModel()
+							.getSelectedIndex() + 1), directoryTextField.getText(),
+					FileTextField.getText(), "10", "00"));
+			for (int i = timeTable.table.getSelectionModel()// 番号を修正
+					.getSelectedIndex(); i < timeTable.timeTableDatas.size(); i++) {
+				timeTable.timeTableDatas.get(i)
+						.setNumber(String.valueOf(i + 1));
+			}
+			newEvent.close();
+		};
+		registrationButton.addEventHandler(ActionEvent.ACTION,
+				registrationHandler);
+
+		hboxDirectory.getChildren().addAll(directoryLabel, directoryTextField);
+		hboxFile.getChildren().addAll(FileLabel, FileTextField);
+		vbox.getChildren().addAll(hboxDirectory,hboxFile,registrationButton);
+		newEvent.setScene(scene);
+		newEvent.initModality(Modality.APPLICATION_MODAL);
+		newEvent.show();
+
 	}
 
 	private Node createHeadWline() {
