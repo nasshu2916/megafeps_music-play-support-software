@@ -376,7 +376,7 @@ public class PlayerUi extends PlayerSystem {
 			playIndex++;
 			if (playIndex >= main.schedules.size() - 1)
 				playIndex = 0;
-		} while (main.schedules.get(playIndex).getDirectry().equals(""));
+		} while (main.schedules.get(playIndex).getDirectry().isEmpty());
 		setPlayer();
 	}
 
@@ -385,7 +385,7 @@ public class PlayerUi extends PlayerSystem {
 			playIndex--;
 			if (playIndex <= 0)
 				playIndex = main.schedules.size() - 1;
-		} while (main.schedules.get(playIndex).getDirectry().equals(""));
+		} while (main.schedules.get(playIndex).getDirectry().isEmpty());
 		setPlayer();
 	}
 
@@ -401,7 +401,7 @@ public class PlayerUi extends PlayerSystem {
 		Button registrationButton = new Button("登録");
 		EventHandler<ActionEvent> registrationHandler = (e) -> {
 			if (main.schedules.get(Integer.parseInt(textField.getText()) - 1)
-					.getDirectry().equals("")) {
+					.getDirectry().isEmpty()) {
 				// エラーメッセージ
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("エラー");
@@ -420,7 +420,7 @@ public class PlayerUi extends PlayerSystem {
 			if (event.getCode().toString() == "ENTER") {
 				if (main.schedules
 						.get(Integer.parseInt(textField.getText()) - 1)
-						.getDirectry().equals("")) {
+						.getDirectry().isEmpty()) {
 				} else {
 					playIndex = Integer.parseInt(textField.getText()) - 1;
 					setPlayer();
@@ -452,7 +452,7 @@ public class PlayerUi extends PlayerSystem {
 	}
 
 	public void setPlayer(int playIndex) {
-		if (main.schedules.get(playIndex).getDirectry().equals("")) {
+		if (main.schedules.get(playIndex).getDirectry().isEmpty()) {
 		} else {
 			setPlayIndex(playIndex);
 			setPlayer();
@@ -466,7 +466,9 @@ public class PlayerUi extends PlayerSystem {
 				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac",
 						"*.mp4", "*.m4a", "*.flv"),
 				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
-				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"));
+				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
+				new ExtensionFilter("All Files", "*.*")
+						);
 		File f = null;
 		f = fc.showOpenDialog(new Stage());
 		if (f != null) {
