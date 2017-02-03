@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 public class ReadFile {
 
-	private String directory = "H:\\旧Dドライブ\\メガフェプス\\2016 大学祭\\メイン１日目";
+	private String directory = "H:\\メガフェプス\\2016 大学祭\\メイン１日目";
 
 	ReadFile(Main main) {
 		try {
@@ -30,7 +30,7 @@ public class ReadFile {
 
 			// ファイルを読み込む
 			File csvFile = new File(
-					"H:\\旧Dドライブ\\メガフェプス\\2016 大学祭\\メイン１日目\\hogehoge.csv"); // 読み込み対象のCSVファイル
+					directory + "\\hogehoge.csv"); // 読み込み対象のCSVファイル
 
 			FileChooser fc = new FileChooser();
 			fc.setInitialDirectory(f);
