@@ -1,0 +1,7 @@
+*.class
+bin/
+.metadata/
+.settings/
+RemoteSystemsTempFiles/
+.classpath/
+.project/
