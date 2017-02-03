@@ -1,3 +1,7 @@
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +25,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	public List<Schedule> schedules = new ArrayList<Schedule>();
 
+	public List<Schedule> schedules = new ArrayList<Schedule>();
 	private ReadFile readFile = new ReadFile(this);
 	private Popup popupMenu = new Popup(this);
 
@@ -162,7 +166,13 @@ public class Main extends Application {
 		Timecode timecode = new Timecode(programTime);
 		AnchorPane.setLeftAnchor(programTime, 150.0);
 
-		pane.getChildren().addAll(timeSet, programTime);
+		Button save = new Button("SAVE");
+		save.setFocusTraversable(false);
+		save.setFont(Font.font(null, FontWeight.BLACK, 24));
+		save.setMinSize(100, 90);
+		AnchorPane.setLeftAnchor(save, 450.0);
+
+		pane.getChildren().addAll(timeSet, programTime, save);
 
 		timeSet.addEventHandler(MouseEvent.MOUSE_CLICKED,
 				new EventHandler<MouseEvent>() {
@@ -219,6 +229,13 @@ public class Main extends Application {
 					}
 				});
 
+		save.addEventHandler(MouseEvent.MOUSE_CLICKED,
+				new EventHandler<MouseEvent>() {
+					public void handle(MouseEvent e) {
+						printTimetable();
+					}
+				});
+
 		return pane;
 	}
 
@@ -236,13 +253,56 @@ public class Main extends Application {
 			return null;
 		}
 	}
-	
+
 	public TimeTable getTimeTable() {
 		return timeTable;
 	}
-	
+
 	public List<Schedule> getSchedules() {
 		return schedules;
 	}
 
+	public ReadFile getReadFile() {
+		return readFile;
+	}
+
+	private void printTimetable() {
+		try {
+			// 出力先を作成する
+			FileOutputStream  fw = new FileOutputStream (readFile.getDirectory()
+					+ "/test.csv", false);
+			OutputStreamWriter osw = new OutputStreamWriter(fw, "SJIS");
+			BufferedWriter bw = new BufferedWriter(osw);
+
+			// 内容を指定する
+			for (int i = 0; i < schedules.size(); i++) {
+				String directryPath = schedules.get(i).getDirectry();
+				String directry = directryPath.replace(readFile.getDirectory()
+						+ "/", "");
+				if (directry == directryPath || directry == "") {
+				} else {
+					bw.write(directry);
+				}
+				bw.write(",");
+				bw.write(schedules.get(i).getFileName() + ",");
+				bw.write(schedules.get(i).getStartTime().getHour() + ",");
+				bw.write(schedules.get(i).getStartTime().getMinute() + ",");
+				bw.write(schedules.get(i).getStartTime().getSecond() + ",");
+				bw.write(schedules.get(i).getAllotTime().getMinute() + ",");
+				bw.write(schedules.get(i).getAllotTime().getSecond() + ",");
+				bw.newLine();
+			}
+
+			// ファイルに書き出す
+			bw.close();
+
+			// 終了メッセージを画面に出力する
+			System.out.println("出力が完了しました。");
+
+		} catch (IOException ex) {
+			// 例外時処理
+			ex.printStackTrace();
+		}
+
+	}
 }

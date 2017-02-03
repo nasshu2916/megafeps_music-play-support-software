@@ -48,14 +48,16 @@ public class PlayerUi extends PlayerSystem {
 
 	protected void createPlayerWindow() {
 		File file = getfFileName();
-
+		if (!file.exists()){
+		    System.out.println("ファイルは存在しません");
+		    return;
+		}
 		createPlayerWindow(file);
 	}
 
 	protected void createPlayerWindow(File file) {
 		media = new Media(file.toURI().toString());
 		mediaPlayer = new MediaPlayer(media);
-
 		name = new Label(String.valueOf(playIndex + 1) + "\t曲名 : "
 				+ file.getName());
 		name.setFont(Font.font(null, FontWeight.BLACK, 16));

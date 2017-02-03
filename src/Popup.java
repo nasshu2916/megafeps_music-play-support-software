@@ -14,9 +14,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 public class Popup {
 
@@ -83,7 +83,6 @@ public class Popup {
 				});
 		menu3.addEventHandler(ActionEvent.ACTION, e -> {
 			setNewEventWindow();
-
 		});
 
 		menu4.addEventHandler(
@@ -120,8 +119,14 @@ public class Popup {
 				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
 				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
 				new ExtensionFilter("All Files", "*.*"));
+		fc.setInitialDirectory(new File(main.getReadFile().getDirectory()));
 
 		File file = fc.showOpenDialog(new Stage());
+
+		if (file == null) {
+			// ファイルが選択されてない場合
+			return;
+		}
 
 		Stage newEvent = new Stage();
 		HBox hboxDirectory = new HBox(10);
@@ -181,7 +186,9 @@ public class Popup {
 		EventHandler<ActionEvent> fileChangeHandler = (e) -> {
 
 			File f = fc.showOpenDialog(new Stage());
-
+			if (f == null) {
+				return;
+			}
 			directoryTextField.setText(f.getParent());
 			fileTextField.setText(f.getName());
 		};
@@ -354,6 +361,9 @@ public class Popup {
 		EventHandler<ActionEvent> fileChangeHandler = (e) -> {
 
 			File f = fc.showOpenDialog(new Stage());
+			if (f == null) {
+				return;
+			}
 
 			directoryTextField.setText(f.getParent());
 			fileTextField.setText(f.getName());

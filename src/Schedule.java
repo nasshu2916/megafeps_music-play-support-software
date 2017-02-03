@@ -1,4 +1,3 @@
-
 public class Schedule {
 	private String directory;
 	private String fileName;
@@ -44,7 +43,6 @@ public class Schedule {
 		AllotTime(int minute, int second) {
 			this.minute = minute;
 			this.second = second;
-
 		}
 
 		public int getMinute() {
@@ -74,7 +72,6 @@ public class Schedule {
 			this.hour = hour;
 			this.minute = minute;
 			this.second = second;
-
 		}
 
 		public int getHour() {

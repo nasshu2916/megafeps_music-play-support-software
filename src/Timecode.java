@@ -1,5 +1,4 @@
 
-
 import java.text.DecimalFormat;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -20,7 +19,6 @@ public class Timecode {
 	private int correctionTime = 000;
 	private DecimalFormat dformat = new DecimalFormat("00");
 	private Label label;
-	
 
 	Timecode(Label label) {
 		Timeline timer = new Timeline(new KeyFrame(Duration.millis(100),

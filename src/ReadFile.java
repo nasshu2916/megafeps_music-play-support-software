@@ -1,5 +1,4 @@
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,8 +28,7 @@ public class ReadFile {
 			}
 
 			// ファイルを読み込む
-			File csvFile = new File(
-					directory + "\\hogehoge.csv"); // 読み込み対象のCSVファイル
+			File csvFile = new File(directory + "\\hogehoge.csv"); // 読み込み対象のCSVファイル
 
 			FileChooser fc = new FileChooser();
 			fc.setInitialDirectory(f);
@@ -79,5 +77,9 @@ public class ReadFile {
 			ex.printStackTrace();
 
 		}
+	}
+	
+	public String getDirectory() {
+		return directory;
 	}
 }
