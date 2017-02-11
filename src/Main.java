@@ -1,4 +1,5 @@
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -21,6 +22,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -36,6 +39,8 @@ public class Main extends Application {
 	private Player media2 = new Player(this);
 	private Player media3 = new Player(this);
 	private Player media4 = new Player(this);
+
+	private Scene mainscene;
 
 	// private Player media1;
 
@@ -143,18 +148,18 @@ public class Main extends Application {
 		};
 		root.addEventFilter(KeyEvent.KEY_PRESSED, sceneKeyFilter);
 
-		Scene scene = new Scene(root, 1200, 800);
+		mainscene = new Scene(root, 1200, 800);
 
 		primaryStage.setTitle("使用曲再生ソフト");
-		primaryStage.setScene(scene);
+		primaryStage.setScene(mainscene);
 		primaryStage.show();
 		// media1.mediaPlay();
 		// media2.getMediaPlayer().setVolume(0.1);
 	}
 
 	private Node createHeadWline() {
-		AnchorPane pane = new AnchorPane();
 
+		AnchorPane pane = new AnchorPane();
 		Button timeSet = new Button("時計合わせ");
 		timeSet.setFocusTraversable(false);
 		timeSet.setFont(Font.font(null, FontWeight.BLACK, 24));
@@ -232,7 +237,16 @@ public class Main extends Application {
 		save.addEventHandler(MouseEvent.MOUSE_CLICKED,
 				new EventHandler<MouseEvent>() {
 					public void handle(MouseEvent e) {
-						printTimetable();
+
+						FileChooser fileChooser = new FileChooser();
+						fileChooser.setTitle("名前をつけて保存");
+						fileChooser.getExtensionFilters().add(
+								new ExtensionFilter("タイムテーブル", "*.csv"));
+						File selectedFile = fileChooser.showOpenDialog(null);
+						if (selectedFile != null) {
+							System.out.println(selectedFile);
+							printTimetable(selectedFile);
+						}
 					}
 				});
 
@@ -266,11 +280,10 @@ public class Main extends Application {
 		return readFile;
 	}
 
-	private void printTimetable() {
+	private void printTimetable(File file) {
 		try {
 			// 出力先を作成する
-			FileOutputStream  fw = new FileOutputStream (readFile.getDirectory()
-					+ "/test.csv", false);
+			FileOutputStream fw = new FileOutputStream(file, false);
 			OutputStreamWriter osw = new OutputStreamWriter(fw, "SJIS");
 			BufferedWriter bw = new BufferedWriter(osw);
 
@@ -278,7 +291,7 @@ public class Main extends Application {
 			for (int i = 0; i < schedules.size(); i++) {
 				String directryPath = schedules.get(i).getDirectry();
 				String directry = directryPath.replace(readFile.getDirectory()
-						+ "/", "");
+						+ "\\", "");
 				if (directry == directryPath || directry == "") {
 				} else {
 					bw.write(directry);
@@ -305,4 +318,5 @@ public class Main extends Application {
 		}
 
 	}
+
 }

@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,8 +59,9 @@ public class ReadFile {
 									.parseInt(fruit[5]), Integer
 									.parseInt(fruit[6])));
 				} else {
-					main.schedules.add(new Schedule(directory + "/" + fruit[0],
-							fruit[1], Integer.parseInt(fruit[2]), Integer
+					main.schedules.add(new Schedule(
+							directory + "\\" + fruit[0], fruit[1], Integer
+									.parseInt(fruit[2]), Integer
 									.parseInt(fruit[3]), Integer
 									.parseInt(fruit[4]), Integer
 									.parseInt(fruit[5]), Integer
@@ -78,7 +78,7 @@ public class ReadFile {
 
 		}
 	}
-	
+
 	public String getDirectory() {
 		return directory;
 	}
