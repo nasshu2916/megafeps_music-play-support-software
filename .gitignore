@@ -1,9 +1,11 @@
 *.class
-bin/
+/bin/
 .metadata/
 .settings/
-RemoteSystemsTempFiles/
+/RemoteSystemsTempFiles/
 .classpath/
 .project/
 *.js
 *.log
+
+.project
