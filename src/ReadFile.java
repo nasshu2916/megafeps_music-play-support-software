@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 public class ReadFile {
 
 	private String directory = "H:\\メガフェプス\\2016 大学祭\\メイン１日目";
+	private File programDataFile;
 
 	ReadFile(Main main) {
 		try {
@@ -27,7 +28,7 @@ public class ReadFile {
 			}
 
 			// ファイルを読み込む
-			File csvFile = new File(directory + "\\hogehoge.csv"); // 読み込み対象のCSVファイル
+			programDataFile = new File(directory + "\\hogehoge.csv"); // 読み込み対象のCSVファイル
 
 			FileChooser fc = new FileChooser();
 			fc.setInitialDirectory(f);
@@ -37,7 +38,7 @@ public class ReadFile {
 
 			f = fc.showOpenDialog(new Stage());
 			if (f != null) {
-				csvFile = f;
+				programDataFile = f;
 				System.out.print("hoge");
 			} else {
 				System.out.println("台本が選択されていません");
@@ -45,7 +46,7 @@ public class ReadFile {
 
 			// SJISを指定
 			BufferedReader br = new BufferedReader(new InputStreamReader(
-					new FileInputStream(csvFile), "SJIS"));
+					new FileInputStream(programDataFile), "SJIS"));
 
 			// 読み込んだファイルを1行ずつ処理する
 			String s;
@@ -81,5 +82,9 @@ public class ReadFile {
 
 	public String getDirectory() {
 		return directory;
+	}
+
+	public File getProgramDataFile() {
+		return programDataFile;
 	}
 }

@@ -57,7 +57,7 @@ public class PlayerSystem {
 	protected void setPlayIndex(int playIndex) {
 		this.playIndex = playIndex;
 	}
-	
+
 	protected int getPlayIndex() {
 		return playIndex;
 	}
