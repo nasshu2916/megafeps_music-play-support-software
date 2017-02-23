@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -280,7 +279,7 @@ public class Main extends Application {
 		MenuItem menu2_4 = new MenuItem("名前を付けて保存");
 		MenuItem menu2_5 = new SeparatorMenuItem();
 		MenuItem menu2_6 = new MenuItem("時計合わせ");
-		menu2_3.setDisable(true);
+		menu2_2.setDisable(true);
 		menu2_1.getItems().addAll(menu2_2, menu2_3, menu2_4, menu2_5, menu2_6);
 
 		// メニューViewModeを、ラジオメニューで作成
@@ -295,6 +294,10 @@ public class Main extends Application {
 			Platform.exit();// 終了させる
 		});
 
+		menu2_3.addEventHandler(ActionEvent.ACTION, e -> {
+			printTimetable(readFile.getProgramDataFile());
+		});
+
 		menu2_4.addEventHandler(ActionEvent.ACTION, e -> {
 			saveAsFile();
 		});
@@ -305,7 +308,7 @@ public class Main extends Application {
 
 		// メニューを登録
 		menuBar.getMenus().addAll(menu1_1, menu2_1, menu3_1);
-
+		menuBar.useSystemMenuBarProperty();
 		return menuBar;
 	}
 
