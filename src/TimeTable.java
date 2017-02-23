@@ -85,7 +85,7 @@ public class TimeTable {
 
 	/**
 	 * テーブル表示用のローカルクラス
-	 * 
+	 *
 	 * @author
 	 *
 	 */
@@ -106,9 +106,9 @@ public class TimeTable {
 		}
 
 		public void setNumber(String number){
-			this.number = number;			
+			this.number = number;
 		}
-		
+
 		public String getElement1() {
 			return number;
 		}

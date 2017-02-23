@@ -147,7 +147,7 @@ public class PlayerUi extends PlayerSystem {
 
 	/**
 	 * スペクトル表示ノードを作成
-	 * 
+	 *
 	 * @param mp
 	 */
 	private void createSpectrum() {
