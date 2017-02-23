@@ -7,13 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -26,6 +34,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Main extends Application {
 
@@ -55,6 +64,11 @@ public class Main extends Application {
 		VBox root = new VBox();
 		HBox hbox1 = new HBox();
 
+		// MenuBar menuBar = new MenuBar();
+		// Menu menu1 = new Menu("aaa");
+
+		root.getChildren().add(createMenuBar());
+
 		root.getChildren().add(createHeadWline());
 		ContextMenu menu = popupMenu.createPopupMenu();
 
@@ -69,8 +83,7 @@ public class Main extends Application {
 		timeTable.table.getSelectionModel().select(media1.getPlayIndex());
 		// timeTable.table.scrollTo(media1.getPlayIndex());
 
-		hbox1.getChildren().addAll(media1.getPanel(), media2.getPanel(),
-				media3.getPanel(), media4.getPanel());
+		hbox1.getChildren().addAll(media1.getPanel(), media2.getPanel(), media3.getPanel(), media4.getPanel());
 		root.getChildren().add(hbox1);
 
 		/* アクションイベント */
@@ -152,6 +165,13 @@ public class Main extends Application {
 
 		primaryStage.setTitle("使用曲再生ソフト");
 		primaryStage.setScene(mainscene);
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent t) {
+				System.out.println("handle " + t.getEventType());
+				// t.consume();
+			}
+		});
 		primaryStage.show();
 		// media1.mediaPlay();
 		// media2.getMediaPlayer().setVolume(0.1);
@@ -179,76 +199,60 @@ public class Main extends Application {
 
 		pane.getChildren().addAll(timeSet, programTime, save);
 
-		timeSet.addEventHandler(MouseEvent.MOUSE_CLICKED,
-				new EventHandler<MouseEvent>() {
+		timeSet.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				// 新しいウインドウを生成
+				Label correctionBeforTime = new Label("befor time");
+				Label correctionAfterTime = new Label("After time");
+				new Timecode(correctionBeforTime, "補正前 : ");
+				Timecode correctionTimecode = new Timecode(correctionAfterTime, "補正後 : ", timecode.getCorrectionTime());
+				correctionBeforTime.setFont(Font.font(null, FontWeight.BLACK, 24));
+				correctionBeforTime.setTextFill(Color.GREEN);
+
+				correctionAfterTime.setFont(Font.font(null, FontWeight.BLACK, 24));
+				correctionAfterTime.setTextFill(Color.RED);
+
+				Stage newStage = new Stage();
+				newStage.setTitle("時計合わせ");
+				// 新しいウインドウ内に配置するコンテンツを生成
+				HBox hbox = new HBox();
+				VBox vbox = new VBox();
+				Label correctionTimeLabel = new Label("調整時間\n(ミリ秒)");
+
+				TextField textField = new TextField(String.valueOf(timecode.getCorrectionTime()));
+
+				Button registrationButton = new Button("登録");
+				registrationButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 					public void handle(MouseEvent e) {
-						// 新しいウインドウを生成
-						Label correctionBeforTime = new Label("befor time");
-						Label correctionAfterTime = new Label("After time");
-						new Timecode(correctionBeforTime, "補正前 : ");
-						Timecode correctionTimecode = new Timecode(
-								correctionAfterTime, "補正後 : ", timecode
-										.getCorrectionTime());
-						correctionBeforTime.setFont(Font.font(null,
-								FontWeight.BLACK, 24));
-						correctionBeforTime.setTextFill(Color.GREEN);
-
-						correctionAfterTime.setFont(Font.font(null,
-								FontWeight.BLACK, 24));
-						correctionAfterTime.setTextFill(Color.RED);
-
-						Stage newStage = new Stage();
-						newStage.setTitle("時計合わせ");
-						// 新しいウインドウ内に配置するコンテンツを生成
-						HBox hbox = new HBox();
-						VBox vbox = new VBox();
-						Label correctionTimeLabel = new Label("調整時間\n(ミリ秒)");
-
-						TextField textField = new TextField(String
-								.valueOf(timecode.getCorrectionTime()));
-
-						Button registrationButton = new Button("登録");
-						registrationButton.addEventHandler(
-								MouseEvent.MOUSE_CLICKED,
-								new EventHandler<MouseEvent>() {
-									public void handle(MouseEvent e) {
-										timecode.setCorrectionTime(Integer
-												.parseInt(textField.getText()));
-										correctionTimecode
-												.setCorrectionTime(Integer
-														.parseInt(textField
-																.getText()));
-									}
-								});
-
-						hbox.getChildren().addAll(correctionTimeLabel,
-								textField, registrationButton);
-						vbox.getChildren().addAll(hbox, correctionBeforTime,
-								correctionAfterTime);
-						Scene scene = new Scene(vbox, 250, 100);
-						newStage.initModality(Modality.APPLICATION_MODAL);
-						newStage.setScene(scene);
-
-						// 新しいウインドウを表示
-						newStage.show();
+						timecode.setCorrectionTime(Integer.parseInt(textField.getText()));
+						correctionTimecode.setCorrectionTime(Integer.parseInt(textField.getText()));
 					}
 				});
 
-		save.addEventHandler(MouseEvent.MOUSE_CLICKED,
-				new EventHandler<MouseEvent>() {
-					public void handle(MouseEvent e) {
+				hbox.getChildren().addAll(correctionTimeLabel, textField, registrationButton);
+				vbox.getChildren().addAll(hbox, correctionBeforTime, correctionAfterTime);
+				Scene scene = new Scene(vbox, 250, 100);
+				newStage.initModality(Modality.APPLICATION_MODAL);
+				newStage.setScene(scene);
 
-						FileChooser fileChooser = new FileChooser();
-						fileChooser.setTitle("名前をつけて保存");
-						fileChooser.getExtensionFilters().add(
-								new ExtensionFilter("タイムテーブル", "*.csv"));
-						File selectedFile = fileChooser.showOpenDialog(null);
-						if (selectedFile != null) {
-							System.out.println(selectedFile);
-							printTimetable(selectedFile);
-						}
-					}
-				});
+				// 新しいウインドウを表示
+				newStage.show();
+			}
+		});
+
+		save.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("名前をつけて保存");
+				fileChooser.getExtensionFilters().add(new ExtensionFilter("タイムテーブル", "*.csv"));
+				File selectedFile = fileChooser.showOpenDialog(null);
+				if (selectedFile != null) {
+					System.out.println(selectedFile);
+					printTimetable(selectedFile);
+				}
+			}
+		});
 
 		return pane;
 	}
@@ -290,8 +294,7 @@ public class Main extends Application {
 			// 内容を指定する
 			for (int i = 0; i < schedules.size(); i++) {
 				String directryPath = schedules.get(i).getDirectry();
-				String directry = directryPath.replace(readFile.getDirectory()
-						+ "\\", "");
+				String directry = directryPath.replace(readFile.getDirectory() + "\\", "");
 				if (directry == directryPath || directry == "") {
 				} else {
 					bw.write(directry);
@@ -317,6 +320,56 @@ public class Main extends Application {
 			ex.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * メニューを作成
+	 *
+	 * @return 作成したメニュー
+	 */
+	public Node createMenuBar() {
+		// メニュー
+		MenuBar menuBar = new MenuBar();
+		// メニューFileを、一般メニューとして作成
+		// 各メニューにはイメージを付与することが可能
+		Menu menu1_1 = new Menu("終了");
+		MenuItem menu1_2 = new SeparatorMenuItem();
+		MenuItem menu1_3 = new MenuItem("終了");
+
+		menu1_1.getItems().addAll(menu1_2, menu1_3);
+
+		// メニューEditを、チェックメニューで作成
+		Menu menu2_1 = new Menu("ファイル");
+		CheckMenuItem menu2_2 = new CheckMenuItem("開く");
+		CheckMenuItem menu2_3 = new CheckMenuItem("保存");
+		CheckMenuItem menu2_4 = new CheckMenuItem("名前を付けて保存");
+		menu2_4.setDisable(true);
+		menu2_1.getItems().addAll(menu2_2, menu2_3, menu2_4);
+
+		// メニューViewModeを、ラジオメニューで作成
+		Menu menu3_1 = new Menu("ViewMode");
+		RadioMenuItem menu3_2 = new RadioMenuItem("radio1");
+		RadioMenuItem menu3_3 = new RadioMenuItem("radio2");
+		ToggleGroup menu3Group = new ToggleGroup();
+		menu3_2.setUserData("radio1が選択されました");
+		menu3_3.setUserData("radio2が選択されました");
+		menu3_2.setToggleGroup(menu3Group);
+		menu3_3.setToggleGroup(menu3Group);
+		menu3_1.getItems().addAll(menu3_2, menu3_3);
+
+		// メニューにイベントハンドラを登録
+		menu1_3.addEventHandler(ActionEvent.ACTION, e -> {
+			System.out.println(menu1_3.getText());
+		});
+		menu2_2.selectedProperty().addListener((ov, old, current) -> System.out.println("check1:" + current));
+		menu2_3.selectedProperty().addListener((ov, old, current) -> System.out.println("check2:" + current));
+		menu3Group.selectedToggleProperty().addListener((ov, old, current) -> System.out.println("radio:"
+				+ ((menu3Group.getSelectedToggle() == null) ? "" : menu3Group.getSelectedToggle().getUserData())));
+
+		// メニューを登録
+		menuBar.getMenus().addAll(menu1_1, menu2_1, menu3_1);
+
+		return menuBar;
 	}
 
 }
