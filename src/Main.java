@@ -35,10 +35,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class Main extends Application {
-
+	private Popup popupMenu = new Popup(this);
 	public List<Schedule> schedules = new ArrayList<Schedule>();
 	private ReadFile readFile = new ReadFile(this);
-	private Popup popupMenu = new Popup(this);
 
 	private TimeTable timeTable = new TimeTable();
 
@@ -83,7 +82,8 @@ public class Main extends Application {
 		timeTable.table.getSelectionModel().select(media1.getPlayIndex());
 		// timeTable.table.scrollTo(media1.getPlayIndex());
 
-		hbox1.getChildren().addAll(media1.getPanel(), media2.getPanel(), media3.getPanel(), media4.getPanel());
+		hbox1.getChildren().addAll(media1.getPanel(), media2.getPanel(),
+				media3.getPanel(), media4.getPanel());
 		root.getChildren().add(hbox1);
 
 		/* アクションイベント */
@@ -228,8 +228,10 @@ public class Main extends Application {
 			// 内容を指定する
 			for (int i = 0; i < schedules.size(); i++) {
 				String directryPath = schedules.get(i).getDirectry();
-				String directry = directryPath.replace(readFile.getDirectory() + "\\", "");
-				if (directry == directryPath || directry == "") {
+				String directry = directryPath.replace(readFile.getDirectory()
+						+ "\\", "");
+				System.out.println(directry + " , " + directryPath);
+				if (directry.equals(directryPath) || directry == "") {
 				} else {
 					bw.write(directry);
 				}
@@ -277,10 +279,12 @@ public class Main extends Application {
 		MenuItem menu2_2 = new MenuItem("開く");
 		MenuItem menu2_3 = new MenuItem("保存");
 		MenuItem menu2_4 = new MenuItem("名前を付けて保存");
-		MenuItem menu2_5 = new SeparatorMenuItem();
-		MenuItem menu2_6 = new MenuItem("時計合わせ");
-		menu2_2.setDisable(true);
-		menu2_1.getItems().addAll(menu2_2, menu2_3, menu2_4, menu2_5, menu2_6);
+		MenuItem menu2_5 = new MenuItem("閉じる");
+		MenuItem menu2_6 = new SeparatorMenuItem();
+		MenuItem menu2_7 = new MenuItem("時計合わせ");
+		// menu2_5.setDisable(true);
+		menu2_1.getItems().addAll(menu2_2, menu2_3, menu2_4, menu2_5, menu2_6,
+				menu2_7);
 
 		// メニューViewModeを、ラジオメニューで作成
 		Menu menu3_1 = new Menu("Help");
@@ -292,17 +296,30 @@ public class Main extends Application {
 		menu1_3.addEventHandler(ActionEvent.ACTION, e -> {
 			System.out.println(menu1_3.getText());
 			Platform.exit();// 終了させる
+			});
+
+		// 開く
+		menu2_2.addEventHandler(ActionEvent.ACTION, e -> {
+			new ReadFile(this);
 		});
 
+		// 保存
 		menu2_3.addEventHandler(ActionEvent.ACTION, e -> {
 			exportTimetable(readFile.getProgramDataFile());
 		});
 
+		// 名前をつけて保存
 		menu2_4.addEventHandler(ActionEvent.ACTION, e -> {
 			saveAsFile();
 		});
 
-		menu2_6.addEventHandler(ActionEvent.ACTION, e -> {
+		// 閉じる
+		menu2_5.addEventHandler(ActionEvent.ACTION, e -> {
+			closeTimeTeble();
+		});
+
+		// 時計合わせ
+		menu2_7.addEventHandler(ActionEvent.ACTION, e -> {
 			setClockWindow();
 		});
 
@@ -317,7 +334,8 @@ public class Main extends Application {
 		Label correctionBeforTime = new Label("befor time");
 		Label correctionAfterTime = new Label("After time");
 		new Timecode(correctionBeforTime, "補正前 : ");
-		Timecode correctionTimecode = new Timecode(correctionAfterTime, "補正後 : ", timecode.getCorrectionTime());
+		Timecode correctionTimecode = new Timecode(correctionAfterTime,
+				"補正後 : ", timecode.getCorrectionTime());
 		correctionBeforTime.setFont(Font.font(null, FontWeight.BLACK, 24));
 		correctionBeforTime.setTextFill(Color.GREEN);
 
@@ -331,18 +349,24 @@ public class Main extends Application {
 		VBox vbox = new VBox();
 		Label correctionTimeLabel = new Label("調整時間\n(ミリ秒)");
 
-		TextField textField = new TextField(String.valueOf(timecode.getCorrectionTime()));
+		TextField textField = new TextField(String.valueOf(timecode
+				.getCorrectionTime()));
 
 		Button registrationButton = new Button("登録");
-		registrationButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent e) {
-				timecode.setCorrectionTime(Integer.parseInt(textField.getText()));
-				correctionTimecode.setCorrectionTime(Integer.parseInt(textField.getText()));
-			}
-		});
+		registrationButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
+				new EventHandler<MouseEvent>() {
+					public void handle(MouseEvent e) {
+						timecode.setCorrectionTime(Integer.parseInt(textField
+								.getText()));
+						correctionTimecode.setCorrectionTime(Integer
+								.parseInt(textField.getText()));
+					}
+				});
 
-		hbox.getChildren().addAll(correctionTimeLabel, textField, registrationButton);
-		vbox.getChildren().addAll(hbox, correctionBeforTime, correctionAfterTime);
+		hbox.getChildren().addAll(correctionTimeLabel, textField,
+				registrationButton);
+		vbox.getChildren().addAll(hbox, correctionBeforTime,
+				correctionAfterTime);
 		Scene scene = new Scene(vbox, 250, 100);
 		newStage.initModality(Modality.APPLICATION_MODAL);
 		newStage.setScene(scene);
@@ -354,7 +378,8 @@ public class Main extends Application {
 	private void saveAsFile() {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("名前をつけて保存");
-		fileChooser.getExtensionFilters().add(new ExtensionFilter("タイムテーブル", "*.csv"));
+		fileChooser.getExtensionFilters().add(
+				new ExtensionFilter("タイムテーブル", "*.csv"));
 		File selectedFile = fileChooser.showSaveDialog(null);
 		if (selectedFile != null) {
 			System.out.println(selectedFile);
@@ -362,4 +387,9 @@ public class Main extends Application {
 		}
 	}
 
+	private void closeTimeTeble() {
+		readFile = null;
+		schedules.clear();
+		timeTable.timeTableDatas.clear();
+	}
 }
