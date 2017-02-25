@@ -218,7 +218,7 @@ public class Main extends Application {
 		return readFile;
 	}
 
-	private void printTimetable(File file) {
+	private void exportTimetable(File file) {
 		try {
 			// 出力先を作成する
 			FileOutputStream fw = new FileOutputStream(file, false);
@@ -295,7 +295,7 @@ public class Main extends Application {
 		});
 
 		menu2_3.addEventHandler(ActionEvent.ACTION, e -> {
-			printTimetable(readFile.getProgramDataFile());
+			exportTimetable(readFile.getProgramDataFile());
 		});
 
 		menu2_4.addEventHandler(ActionEvent.ACTION, e -> {
@@ -308,7 +308,7 @@ public class Main extends Application {
 
 		// メニューを登録
 		menuBar.getMenus().addAll(menu1_1, menu2_1, menu3_1);
-		menuBar.useSystemMenuBarProperty();
+		menuBar.setUseSystemMenuBar(true);
 		return menuBar;
 	}
 
@@ -355,10 +355,10 @@ public class Main extends Application {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("名前をつけて保存");
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("タイムテーブル", "*.csv"));
-		File selectedFile = fileChooser.showOpenDialog(null);
+		File selectedFile = fileChooser.showSaveDialog(null);
 		if (selectedFile != null) {
 			System.out.println(selectedFile);
-			printTimetable(selectedFile);
+			exportTimetable(selectedFile);
 		}
 	}
 

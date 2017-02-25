@@ -39,7 +39,7 @@ public class ReadFile {
 			f = fc.showOpenDialog(new Stage());
 			if (f != null) {
 				programDataFile = f;
-				System.out.print("hoge");
+				System.out.print(f);
 			} else {
 				System.out.println("台本が選択されていません");
 			}
@@ -61,7 +61,7 @@ public class ReadFile {
 									.parseInt(fruit[6])));
 				} else {
 					main.schedules.add(new Schedule(
-							directory + "\\" + fruit[0], fruit[1], Integer
+							directory + "/" + fruit[0], fruit[1], Integer
 									.parseInt(fruit[2]), Integer
 									.parseInt(fruit[3]), Integer
 									.parseInt(fruit[4]), Integer
