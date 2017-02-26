@@ -300,12 +300,7 @@ public class Main extends Application {
 			DecimalFormat dformat = new DecimalFormat("00");
 
 			for (int i = 0; i < schedules.size(); i++) {
-				timeTable.timeTableDatas.add(timeTable.setTimeTableData(dformat.format(i + 1), schedules.get(i).getDirectry(), schedules.get(i).getFileName(), schedules.get(i).getStartTime().getHour() + ":"
-								+ dformat.format(schedules.get(i).getStartTime().getMinute()) + ":"
-								+ dformat.format(schedules.get(i).getStartTime().getSecond()), schedules.get(i).getAllotTime().getMinute() + ":"
-								+ dformat.format(schedules.get(i).getAllotTime().getSecond())));
-
-
+				timeTable.timeTableDatas.add(timeTable.setTimeTableData(dformat.format(i + 1), schedules.get(i)));
 			}
 
 		});
