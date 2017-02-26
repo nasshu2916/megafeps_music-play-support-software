@@ -29,7 +29,7 @@ public class Popup {
 
 	/**
 	 * ポップアップメニューを作成
-	 * 
+	 *
 	 * @return 作成したメニュー
 	 */
 	public ContextMenu createPopupMenu() {
@@ -53,55 +53,31 @@ public class Popup {
 
 		menu.getItems().addAll(menu1, menu2, menu3, menu4, menu5);
 		// イベントハンドラはMenuItemに設定
-		menu1_2.addEventHandler(
-				ActionEvent.ACTION,
-				e -> {
-					main.getMedia(0).setPlayer(
-							main.getTimeTable().table.getSelectionModel()
-									.getSelectedIndex());
-				});
-		menu1_3.addEventHandler(
-				ActionEvent.ACTION,
-				e -> {
-					main.getMedia(1).setPlayer(
-							main.getTimeTable().table.getSelectionModel()
-									.getSelectedIndex());
-				});
-		menu1_4.addEventHandler(
-				ActionEvent.ACTION,
-				e -> {
-					main.getMedia(2).setPlayer(
-							main.getTimeTable().table.getSelectionModel()
-									.getSelectedIndex());
-				});
-		menu1_5.addEventHandler(
-				ActionEvent.ACTION,
-				e -> {
-					main.getMedia(3).setPlayer(
-							main.getTimeTable().table.getSelectionModel()
-									.getSelectedIndex());
-				});
+		menu1_2.addEventHandler(ActionEvent.ACTION, e -> {
+			main.getMedia(0).setPlayer(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
+		});
+		menu1_3.addEventHandler(ActionEvent.ACTION, e -> {
+			main.getMedia(1).setPlayer(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
+		});
+		menu1_4.addEventHandler(ActionEvent.ACTION, e -> {
+			main.getMedia(2).setPlayer(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
+		});
+		menu1_5.addEventHandler(ActionEvent.ACTION, e -> {
+			main.getMedia(3).setPlayer(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
+		});
 		menu3.addEventHandler(ActionEvent.ACTION, e -> {
 			setNewEventWindow();
 		});
 
-		menu4.addEventHandler(
-				ActionEvent.ACTION,
-				e -> {
-					main.getSchedules().remove(
-							main.getTimeTable().table.getSelectionModel()
-									.getSelectedIndex());
-					main.getTimeTable().timeTableDatas.remove(main
-							.getTimeTable().table.getSelectionModel()
-							.getSelectedIndex());
-					for (int i = main.getTimeTable().table.getSelectionModel()
-							.getSelectedIndex(); i < main.getTimeTable().timeTableDatas
-							.size(); i++) {
-						main.getTimeTable().timeTableDatas.get(i).setNumber(
-								dformat.format(i + 1));
+		menu4.addEventHandler(ActionEvent.ACTION, e -> {
+			main.getSchedules().remove(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
+			main.getTimeTable().timeTableDatas.remove(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
+			for (int i = main.getTimeTable().table.getSelectionModel()
+					.getSelectedIndex(); i < main.getTimeTable().timeTableDatas.size(); i++) {
+				main.getTimeTable().timeTableDatas.get(i).setNumber(dformat.format(i + 1));
 
-					}
-				});
+			}
+		});
 
 		menu5.addEventHandler(ActionEvent.ACTION, e -> {
 			chengeEventData();
@@ -114,12 +90,9 @@ public class Popup {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("ファイルを選択してください");
 		fc.getExtensionFilters().addAll(
-				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac",
-						"*.mp4", "*.m4a", "*.flv"),
+				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac", "*.mp4", "*.m4a", "*.flv"),
 				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
-				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
-				new ExtensionFilter("All Files", "*.*"));
-		fc.setInitialDirectory(new File(main.getReadFile().getDirectory()));
+				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"), new ExtensionFilter("All Files", "*.*"));
 
 		File file = fc.showOpenDialog(new Stage());
 
@@ -214,37 +187,23 @@ public class Popup {
 			allotSecond = allotTime % 100;
 			allotMinute = allotTime / 100;
 
-			main.getSchedules().add(
-					main.getTimeTable().table.getSelectionModel()
-							.getSelectedIndex(),
-					new Schedule(directoryTextField.getText(), fileTextField
-							.getText(), startHour, startMinute, startSecond,
-							allotMinute, allotSecond));
-			main.getTimeTable().timeTableDatas.add(
-					main.getTimeTable().table.getSelectionModel()
-							.getSelectedIndex(),
-					main.getTimeTable()
-							.setTimeTableData(
-									dformat.format(main.getTimeTable().table
-											.getSelectionModel()
-											.getSelectedIndex() + 1),
-									directoryTextField.getText(),
-									fileTextField.getText(),
-									String.valueOf(startHour) + ":"
-											+ dformat.format(startMinute) + ":"
-											+ dformat.format(startSecond),
-									String.valueOf(allotMinute) + ":"
-											+ dformat.format(allotSecond)));
+			main.getSchedules().add(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
+					new Schedule(directoryTextField.getText(), fileTextField.getText(), startHour, startMinute,
+							startSecond, allotMinute, allotSecond));
+			main.getTimeTable().timeTableDatas.add(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
+					main.getTimeTable().setTimeTableData(
+							dformat.format(main.getTimeTable().table.getSelectionModel().getSelectedIndex() + 1),
+							directoryTextField.getText(), fileTextField.getText(),
+							String.valueOf(startHour) + ":" + dformat.format(startMinute) + ":"
+									+ dformat.format(startSecond),
+							String.valueOf(allotMinute) + ":" + dformat.format(allotSecond)));
 			for (int i = main.getTimeTable().table.getSelectionModel()// 番号を修正
-					.getSelectedIndex(); i < main.getTimeTable().timeTableDatas
-					.size(); i++) {
-				main.getTimeTable().timeTableDatas.get(i).setNumber(
-						dformat.format(i + 1));
+					.getSelectedIndex(); i < main.getTimeTable().timeTableDatas.size(); i++) {
+				main.getTimeTable().timeTableDatas.get(i).setNumber(dformat.format(i + 1));
 			}
 			newEvent.close();
 		};
-		registrationButton.addEventHandler(ActionEvent.ACTION,
-				registrationHandler);
+		registrationButton.addEventHandler(ActionEvent.ACTION, registrationHandler);
 
 		EventHandler<ActionEvent> CancelButtonHandler = (e) -> {
 			newEvent.close();
@@ -256,8 +215,8 @@ public class Popup {
 		hboxStartTime.getChildren().addAll(startTimeLabel, startTimeTextField);
 		hboxAllotTime.getChildren().addAll(allotTimeLabel, allotTimeTextField);
 		hboxBottumSelect.getChildren().addAll(registrationButton, CancelButton);
-		vbox.getChildren().addAll(hboxDirectory, hboxFile, fileChangeButton,
-				hboxStartTime, hboxAllotTime, hboxBottumSelect);
+		vbox.getChildren().addAll(hboxDirectory, hboxFile, fileChangeButton, hboxStartTime, hboxAllotTime,
+				hboxBottumSelect);
 		newEvent.setScene(scene);
 		newEvent.initModality(Modality.APPLICATION_MODAL);
 		newEvent.show();
@@ -267,11 +226,9 @@ public class Popup {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("ファイルを選択してください");
 		fc.getExtensionFilters().addAll(
-				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac",
-						"*.mp4", "*.m4a", "*.flv"),
+				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac", "*.mp4", "*.m4a", "*.flv"),
 				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
-				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
-				new ExtensionFilter("All Files", "*.*"));
+				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"), new ExtensionFilter("All Files", "*.*"));
 
 		Stage newEvent = new Stage();
 		HBox hboxDirectory = new HBox(10);
@@ -285,32 +242,22 @@ public class Popup {
 		Label directoryLabel = new Label("ディレクトリ\t");
 		Label fileLabel = new Label("ファイル名\t");
 
-		TextField directoryTextField = new TextField(
-				main.getTimeTable().timeTableDatas.get(
-						main.getTimeTable().table.getSelectionModel()
-								.getSelectedIndex()).getElement2_1());
-		TextField fileTextField = new TextField(
-				main.getTimeTable().timeTableDatas.get(
-						main.getTimeTable().table.getSelectionModel()
-								.getSelectedIndex()).getElement2_2());
+		TextField directoryTextField = new TextField(main.getTimeTable().timeTableDatas
+				.get(main.getTimeTable().table.getSelectionModel().getSelectedIndex()).getElement2_1());
+		TextField fileTextField = new TextField(main.getTimeTable().timeTableDatas
+				.get(main.getTimeTable().table.getSelectionModel().getSelectedIndex()).getElement2_2());
 
 		Label startTimeLabel = new Label("開始時間\t");
 		Label allotTimeLabel = new Label("持ち時間\t");
 
-		final TextField startTimeTextField = new TextField(
-				String.valueOf(main
-						.getSchedules()
-						.get(main.getTimeTable().table.getSelectionModel()
-								.getSelectedIndex()).getStartTime().getHour())
-						+ dformat.format(main
-								.getSchedules()
-								.get(main.getTimeTable().table
-										.getSelectionModel().getSelectedIndex())
+		final TextField startTimeTextField = new TextField(String
+				.valueOf(main.getSchedules().get(main.getTimeTable().table.getSelectionModel().getSelectedIndex())
+						.getStartTime().getHour())
+				+ dformat.format(
+						main.getSchedules().get(main.getTimeTable().table.getSelectionModel().getSelectedIndex())
 								.getStartTime().getMinute())
-						+ dformat.format(main
-								.getSchedules()
-								.get(main.getTimeTable().table
-										.getSelectionModel().getSelectedIndex())
+				+ dformat.format(
+						main.getSchedules().get(main.getTimeTable().table.getSelectionModel().getSelectedIndex())
 								.getStartTime().getSecond())) {
 			@Override
 			public void replaceText(int start, int end, String text) {
@@ -328,15 +275,11 @@ public class Popup {
 		};
 		startTimeTextField.setPrefWidth(100);
 
-		final TextField allotTimeTextField = new TextField(
-				String.valueOf(main
-						.getSchedules()
-						.get(main.getTimeTable().table.getSelectionModel()
-								.getSelectedIndex()).getAllotTime().getMinute())
-						+ dformat.format(main
-								.getSchedules()
-								.get(main.getTimeTable().table
-										.getSelectionModel().getSelectedIndex())
+		final TextField allotTimeTextField = new TextField(String
+				.valueOf(main.getSchedules().get(main.getTimeTable().table.getSelectionModel().getSelectedIndex())
+						.getAllotTime().getMinute())
+				+ dformat.format(
+						main.getSchedules().get(main.getTimeTable().table.getSelectionModel().getSelectedIndex())
 								.getAllotTime().getSecond())) {
 			@Override
 			public void replaceText(int start, int end, String text) {
@@ -390,31 +333,19 @@ public class Popup {
 			allotSecond = allotTime % 100;
 			allotMinute = allotTime / 100;
 
-			main.getSchedules().set(
-					main.getTimeTable().table.getSelectionModel()
-							.getSelectedIndex(),
-					new Schedule(directoryTextField.getText(), fileTextField
-							.getText(), startHour, startMinute, startSecond,
-							allotMinute, allotSecond));
-			main.getTimeTable().timeTableDatas.set(
-					main.getTimeTable().table.getSelectionModel()
-							.getSelectedIndex(),
-					main.getTimeTable()
-							.setTimeTableData(
-									dformat.format(main.getTimeTable().table
-											.getSelectionModel()
-											.getSelectedIndex() + 1),
-									directoryTextField.getText(),
-									fileTextField.getText(),
-									String.valueOf(startHour) + ":"
-											+ dformat.format(startMinute) + ":"
-											+ dformat.format(startSecond),
-									String.valueOf(allotMinute) + ":"
-											+ dformat.format(allotSecond)));
+			main.getSchedules().set(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
+					new Schedule(directoryTextField.getText(), fileTextField.getText(), startHour, startMinute,
+							startSecond, allotMinute, allotSecond));
+			main.getTimeTable().timeTableDatas.set(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
+					main.getTimeTable().setTimeTableData(
+							dformat.format(main.getTimeTable().table.getSelectionModel().getSelectedIndex() + 1),
+							directoryTextField.getText(), fileTextField.getText(),
+							String.valueOf(startHour) + ":" + dformat.format(startMinute) + ":"
+									+ dformat.format(startSecond),
+							String.valueOf(allotMinute) + ":" + dformat.format(allotSecond)));
 			newEvent.close();
 		};
-		registrationButton.addEventHandler(ActionEvent.ACTION,
-				registrationHandler);
+		registrationButton.addEventHandler(ActionEvent.ACTION, registrationHandler);
 
 		EventHandler<ActionEvent> CancelButtonHandler = (e) -> {
 			newEvent.close();
@@ -426,8 +357,8 @@ public class Popup {
 		hboxStartTime.getChildren().addAll(startTimeLabel, startTimeTextField);
 		hboxAllotTime.getChildren().addAll(allotTimeLabel, allotTimeTextField);
 		hboxBottumSelect.getChildren().addAll(registrationButton, CancelButton);
-		vbox.getChildren().addAll(hboxDirectory, hboxFile, fileChangeButton,
-				hboxStartTime, hboxAllotTime, hboxBottumSelect);
+		vbox.getChildren().addAll(hboxDirectory, hboxFile, fileChangeButton, hboxStartTime, hboxAllotTime,
+				hboxBottumSelect);
 		newEvent.setScene(scene);
 		newEvent.initModality(Modality.APPLICATION_MODAL);
 		newEvent.show();
