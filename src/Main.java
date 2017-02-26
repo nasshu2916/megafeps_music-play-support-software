@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +36,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 public class Main extends Application {
-
+	private Popup popupMenu = new Popup(this);
 	public List<Schedule> schedules = new ArrayList<Schedule>();
 	private ReadFile readFile = new ReadFile(this);
-	private Popup popupMenu = new Popup(this);
 
 	private TimeTable timeTable = new TimeTable();
 
@@ -63,9 +63,6 @@ public class Main extends Application {
 		// ディスプレイサイズを取得
 		VBox root = new VBox();
 		HBox hbox1 = new HBox();
-
-		// MenuBar menuBar = new MenuBar();
-		// Menu menu1 = new Menu("aaa");
 
 		root.getChildren().add(createMenuBar());
 
@@ -218,7 +215,7 @@ public class Main extends Application {
 		return readFile;
 	}
 
-	private void printTimetable(File file) {
+	private void exportTimetable(File file) {
 		try {
 			// 出力先を作成する
 			FileOutputStream fw = new FileOutputStream(file, false);
@@ -229,7 +226,8 @@ public class Main extends Application {
 			for (int i = 0; i < schedules.size(); i++) {
 				String directryPath = schedules.get(i).getDirectry();
 				String directry = directryPath.replace(readFile.getDirectory() + "\\", "");
-				if (directry == directryPath || directry == "") {
+				System.out.println(directry + " , " + directryPath);
+				if (directry.equals(directryPath) || directry == "") {
 				} else {
 					bw.write(directry);
 				}
@@ -277,10 +275,11 @@ public class Main extends Application {
 		MenuItem menu2_2 = new MenuItem("開く");
 		MenuItem menu2_3 = new MenuItem("保存");
 		MenuItem menu2_4 = new MenuItem("名前を付けて保存");
-		MenuItem menu2_5 = new SeparatorMenuItem();
-		MenuItem menu2_6 = new MenuItem("時計合わせ");
-		menu2_2.setDisable(true);
-		menu2_1.getItems().addAll(menu2_2, menu2_3, menu2_4, menu2_5, menu2_6);
+		MenuItem menu2_5 = new MenuItem("閉じる");
+		MenuItem menu2_6 = new SeparatorMenuItem();
+		MenuItem menu2_7 = new MenuItem("時計合わせ");
+		// menu2_5.setDisable(true);
+		menu2_1.getItems().addAll(menu2_2, menu2_3, menu2_4, menu2_5, menu2_6, menu2_7);
 
 		// メニューViewModeを、ラジオメニューで作成
 		Menu menu3_1 = new Menu("Help");
@@ -294,21 +293,46 @@ public class Main extends Application {
 			Platform.exit();// 終了させる
 		});
 
-		menu2_3.addEventHandler(ActionEvent.ACTION, e -> {
-			printTimetable(readFile.getProgramDataFile());
+		// 開く
+		menu2_2.addEventHandler(ActionEvent.ACTION, e -> {
+			new ReadFile(this);
+
+			DecimalFormat dformat = new DecimalFormat("00");
+
+			for (int i = 0; i < schedules.size(); i++) {
+				timeTable.timeTableDatas.add(timeTable.setTimeTableData(dformat.format(i + 1), schedules.get(i).getDirectry(), schedules.get(i).getFileName(), schedules.get(i).getStartTime().getHour() + ":"
+								+ dformat.format(schedules.get(i).getStartTime().getMinute()) + ":"
+								+ dformat.format(schedules.get(i).getStartTime().getSecond()), schedules.get(i).getAllotTime().getMinute() + ":"
+								+ dformat.format(schedules.get(i).getAllotTime().getSecond())));
+
+
+			}
+
 		});
 
+		// 保存
+		menu2_3.addEventHandler(ActionEvent.ACTION, e -> {
+			exportTimetable(readFile.getProgramDataFile());
+		});
+
+		// 名前をつけて保存
 		menu2_4.addEventHandler(ActionEvent.ACTION, e -> {
 			saveAsFile();
 		});
 
-		menu2_6.addEventHandler(ActionEvent.ACTION, e -> {
+		// 閉じる
+		menu2_5.addEventHandler(ActionEvent.ACTION, e -> {
+			closeTimeTeble();
+		});
+
+		// 時計合わせ
+		menu2_7.addEventHandler(ActionEvent.ACTION, e -> {
 			setClockWindow();
 		});
 
 		// メニューを登録
 		menuBar.getMenus().addAll(menu1_1, menu2_1, menu3_1);
-		menuBar.useSystemMenuBarProperty();
+		menuBar.setUseSystemMenuBar(true);
 		return menuBar;
 	}
 
@@ -355,11 +379,16 @@ public class Main extends Application {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("名前をつけて保存");
 		fileChooser.getExtensionFilters().add(new ExtensionFilter("タイムテーブル", "*.csv"));
-		File selectedFile = fileChooser.showOpenDialog(null);
+		File selectedFile = fileChooser.showSaveDialog(null);
 		if (selectedFile != null) {
 			System.out.println(selectedFile);
-			printTimetable(selectedFile);
+			exportTimetable(selectedFile);
 		}
 	}
 
+	private void closeTimeTeble() {
+		readFile = null;
+		schedules.clear();
+		timeTable.timeTableDatas.clear();
+	}
 }

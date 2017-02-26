@@ -11,8 +11,7 @@ public class TimeTable {
 	TableView<TimeTableData> table = new TableView<TimeTableData>();
 
 	// データを追加
-	ObservableList<TimeTableData> timeTableDatas = FXCollections
-			.observableArrayList();
+	ObservableList<TimeTableData> timeTableDatas = FXCollections.observableArrayList();
 
 	public Node creatTimeTable(Main main) {
 		// 表ビューを作成
@@ -22,23 +21,15 @@ public class TimeTable {
 
 		// 列を追加
 		// PropertyValueFactoryでBeanクラスの対応するプロパティを指定
-		TableColumn<TimeTableData, String> scriptNumber = new TableColumn<TimeTableData, String>(
-				"番号");
-		TableColumn<TimeTableData, String> file = new TableColumn<TimeTableData, String>(
-				"ファイル");
-		TableColumn<TimeTableData, String> directryName = new TableColumn<TimeTableData, String>(
-				"ディレクトリパス");
-		TableColumn<TimeTableData, String> fileName = new TableColumn<TimeTableData, String>(
-				"ファイル名");
-		TableColumn<TimeTableData, String> startTime = new TableColumn<TimeTableData, String>(
-				"開始時間");
-		TableColumn<TimeTableData, String> allortTime = new TableColumn<TimeTableData, String>(
-				"持ち時間");
-		scriptNumber
-				.setCellValueFactory(new PropertyValueFactory<>("element1"));
+		TableColumn<TimeTableData, String> scriptNumber = new TableColumn<TimeTableData, String>("番号");
+		TableColumn<TimeTableData, String> file = new TableColumn<TimeTableData, String>("ファイル");
+		TableColumn<TimeTableData, String> directryName = new TableColumn<TimeTableData, String>("ディレクトリパス");
+		TableColumn<TimeTableData, String> fileName = new TableColumn<TimeTableData, String>("ファイル名");
+		TableColumn<TimeTableData, String> startTime = new TableColumn<TimeTableData, String>("開始時間");
+		TableColumn<TimeTableData, String> allortTime = new TableColumn<TimeTableData, String>("持ち時間");
+		scriptNumber.setCellValueFactory(new PropertyValueFactory<>("element1"));
 		scriptNumber.setSortable(false);
-		directryName.setCellValueFactory(new PropertyValueFactory<>(
-				"element2_1"));
+		directryName.setCellValueFactory(new PropertyValueFactory<>("element2_1"));
 		directryName.setSortable(false);
 		fileName.setCellValueFactory(new PropertyValueFactory<>("element2_2"));
 		fileName.setSortable(false);
@@ -52,20 +43,13 @@ public class TimeTable {
 		DecimalFormat dformat = new DecimalFormat("00");
 
 		for (int i = 0; i < main.schedules.size(); i++) {
-			timeTableDatas.add(new TimeTableData(dformat.format(i + 1),
-					main.schedules.get(i).getDirectry(), main.schedules.get(i)
-							.getFileName(), main.schedules.get(i)
-							.getStartTime().getHour()
-							+ ":"
-							+ dformat.format(main.schedules.get(i)
-									.getStartTime().getMinute())
-							+ ":"
-							+ dformat.format(main.schedules.get(i)
-									.getStartTime().getSecond()),
-					main.schedules.get(i).getAllotTime().getMinute()
-							+ ":"
-							+ dformat.format(main.schedules.get(i)
-									.getAllotTime().getSecond())));
+			timeTableDatas.add(new TimeTableData(dformat.format(i + 1), main.schedules.get(i).getDirectry(),
+					main.schedules.get(i).getFileName(),
+					main.schedules.get(i).getStartTime().getHour() + ":"
+							+ dformat.format(main.schedules.get(i).getStartTime().getMinute()) + ":"
+							+ dformat.format(main.schedules.get(i).getStartTime().getSecond()),
+					main.schedules.get(i).getAllotTime().getMinute() + ":"
+							+ dformat.format(main.schedules.get(i).getAllotTime().getSecond())));
 		}
 
 		// データを登録
@@ -76,11 +60,10 @@ public class TimeTable {
 		return table;
 	}
 
-	public TimeTableData setTimeTableData(String number, String directoryPath,
-			String fileName, String StartTime, String allottedTile) {
+	public TimeTableData setTimeTableData(String number, String directoryPath, String fileName, String StartTime,
+			String allottedTile) {
 
-		return new TimeTableData(number, directoryPath, fileName, StartTime,
-				allottedTile);
+		return new TimeTableData(number, directoryPath, fileName, StartTime, allottedTile);
 	}
 
 	/**
@@ -96,8 +79,7 @@ public class TimeTable {
 		private String StartTime;
 		private String allottedTime;
 
-		TimeTableData(String number, String directoryPath, String fileName,
-				String StartTime, String allottedTile) {
+		TimeTableData(String number, String directoryPath, String fileName, String StartTime, String allottedTile) {
 			this.number = number;
 			this.directoryPath = directoryPath;
 			this.fileName = fileName;
@@ -105,7 +87,7 @@ public class TimeTable {
 			this.allottedTime = allottedTile;
 		}
 
-		public void setNumber(String number){
+		public void setNumber(String number) {
 			this.number = number;
 		}
 
