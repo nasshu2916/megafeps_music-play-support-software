@@ -1,5 +1,3 @@
-import java.text.DecimalFormat;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -7,7 +5,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class TimeTable {
+public class TimeTable extends Time{
 	TableView<TimeTableData> table = new TableView<TimeTableData>();
 
 	// データを追加
@@ -40,18 +38,10 @@ public class TimeTable {
 		file.getColumns().addAll(directryName, fileName);
 		table.getColumns().addAll(scriptNumber, startTime, allortTime, file);
 
-		DecimalFormat dformat = new DecimalFormat("00");
-
 		for (int i = 0; i < main.schedules.size(); i++) {
-			timeTableDatas.add(new TimeTableData(dformat.format(i + 1), main.schedules.get(i).getDirectry(),
-					main.schedules.get(i).getFileName(),
-					main.schedules.get(i).getStartTime().getHour() + ":"
-							+ dformat.format(main.schedules.get(i).getStartTime().getMinute()) + ":"
-							+ dformat.format(main.schedules.get(i).getStartTime().getSecond()),
-					main.schedules.get(i).getAllotTime().getMinute() + ":"
-							+ dformat.format(main.schedules.get(i).getAllotTime().getSecond())));
+			timeTableDatas.add(new TimeTableData(dformat.format(i + 1), main.schedules.get(i)));
 		}
-
+		
 		// データを登録
 		table.setItems(timeTableDatas);
 
@@ -65,6 +55,11 @@ public class TimeTable {
 
 		return new TimeTableData(number, directoryPath, fileName, StartTime, allottedTile);
 	}
+	
+	public TimeTableData setTimeTableData(String number, Schedule Schedule) {
+		return new TimeTableData(number, Schedule);
+	}
+	
 
 	/**
 	 * テーブル表示用のローカルクラス
@@ -85,6 +80,22 @@ public class TimeTable {
 			this.fileName = fileName;
 			this.StartTime = StartTime;
 			this.allottedTime = allottedTile;
+		}
+		
+		public TimeTableData(Schedule schedule) {
+			number = "00";
+			directoryPath = schedule.getDirectry();
+			fileName = schedule.getFileName();
+			StartTime = schedule.getStartTime().getStringTime();
+			allottedTime = schedule.getAllotTime().getStringTime();
+		}
+		
+		public TimeTableData(String num,Schedule schedule) {
+			number = num;
+			directoryPath = schedule.getDirectry();
+			fileName = schedule.getFileName();
+			StartTime = schedule.getStartTime().getStringTime();
+			allottedTime = schedule.getAllotTime().getStringTime();
 		}
 
 		public void setNumber(String number) {

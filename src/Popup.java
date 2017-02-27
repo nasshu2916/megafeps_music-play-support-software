@@ -50,7 +50,6 @@ public class Popup {
 		// menu1.setDisable(true);
 
 		menu1.getItems().addAll(menu1_2, menu1_3, menu1_4, menu1_5);
-
 		menu.getItems().addAll(menu1, menu2, menu3, menu4, menu5);
 		// イベントハンドラはMenuItemに設定
 		menu1_2.addEventHandler(ActionEvent.ACTION, e -> {
@@ -70,12 +69,14 @@ public class Popup {
 		});
 
 		menu4.addEventHandler(ActionEvent.ACTION, e -> {
-			main.getSchedules().remove(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
-			main.getTimeTable().timeTableDatas.remove(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
-			for (int i = main.getTimeTable().table.getSelectionModel()
-					.getSelectedIndex(); i < main.getTimeTable().timeTableDatas.size(); i++) {
+			int selectNum = main.getTimeTable().table.getSelectionModel().getSelectedIndex();
+			if (selectNum < 0 ) {
+				selectNum = 0;
+			}
+			main.getSchedules().remove(selectNum);
+			main.getTimeTable().timeTableDatas.remove(selectNum);
+			for (int i = selectNum; i < main.getTimeTable().timeTableDatas.size(); i++) {
 				main.getTimeTable().timeTableDatas.get(i).setNumber(dformat.format(i + 1));
-
 			}
 		});
 
@@ -343,6 +344,7 @@ public class Popup {
 							String.valueOf(startHour) + ":" + dformat.format(startMinute) + ":"
 									+ dformat.format(startSecond),
 							String.valueOf(allotMinute) + ":" + dformat.format(allotSecond)));
+			
 			newEvent.close();
 		};
 		registrationButton.addEventHandler(ActionEvent.ACTION, registrationHandler);
@@ -363,4 +365,5 @@ public class Popup {
 		newEvent.initModality(Modality.APPLICATION_MODAL);
 		newEvent.show();
 	}
+
 }
