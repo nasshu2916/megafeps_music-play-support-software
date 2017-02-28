@@ -1,13 +1,14 @@
 
-
 import java.io.File;
 
+import javafx.scene.control.Label;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
@@ -17,6 +18,8 @@ public class PlayerSystem {
 	protected VBox panel = new VBox();
 	protected int playerNumber;
 	protected int playIndex = 0;
+	protected Label fileName;
+	protected Media media;
 
 	protected File getfFileName() {
 		return new File(main.schedules.get(playIndex).getDirectry() + "/"
@@ -34,9 +37,8 @@ public class PlayerSystem {
 	}
 
 	protected void setBorderColor(Color color) {
-		panel.setBorder(new Border(new BorderStroke(color,
-				BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
-				new BorderWidths(10))));
+		panel.setBorder(new Border(new BorderStroke(color, BorderStrokeStyle.SOLID,
+				CornerRadii.EMPTY, new BorderWidths(10))));
 	}
 
 	protected void mediaPlay() {
@@ -46,7 +48,7 @@ public class PlayerSystem {
 
 	protected void mediaStop() {
 		mediaPlayer.stop();
-		setBorderColor(Color.BLUE);
+		setBorderColor(Color.GRAY);
 	}
 
 	protected void mediaPause() {
