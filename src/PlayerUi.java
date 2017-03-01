@@ -43,14 +43,12 @@ public class PlayerUi extends PlayerSystem {
 	private Slider volumeSlider;
 
 	private int panelwide = 1200 / 4 - 20;
-	private Label name;
-	private Media media;
 
 	protected void createPlayerWindow() {
-		File file = getfFileName();
-		if (!file.exists()){
-		    System.out.println("ファイルは存在しません");
-		    return;
+		File file = getFileName();
+		if (!file.exists()) {
+			System.out.println("ファイルは存在しません");
+			return;
 		}
 		createPlayerWindow(file);
 	}
@@ -58,10 +56,9 @@ public class PlayerUi extends PlayerSystem {
 	protected void createPlayerWindow(File file) {
 		media = new Media(file.toURI().toString());
 		mediaPlayer = new MediaPlayer(media);
-		name = new Label(String.valueOf(playIndex + 1) + "\t曲名 : "
-				+ file.getName());
-		name.setFont(Font.font(null, FontWeight.BLACK, 16));
-		panel.getChildren().add(name);
+		fileName = new Label(String.valueOf(playIndex + 1) + "\t曲名 : " + file.getName());
+		fileName.setFont(Font.font(null, FontWeight.BLACK, 16));
+		panel.getChildren().add(fileName);
 
 		// スペクトル表示
 
@@ -77,13 +74,11 @@ public class PlayerUi extends PlayerSystem {
 		// 再生・停止・繰り返しボタン作成
 		// 時間表示スライダ作成
 		// ボリューム表示スライダ作成
-		panel.getChildren().addAll(createButton(mediaPlayer),
-				createTimeSlider(), createVolumeSlider(),
-				createPlaylistButton(mediaPlayer));
+		panel.getChildren().addAll(createButton(mediaPlayer), createTimeSlider(),
+				createVolumeSlider(), createPlaylistButton(mediaPlayer));
 
-		panel.setBorder(new Border(new BorderStroke(Color.GREEN,
-				BorderStrokeStyle.SOLID, CornerRadii.EMPTY,
-				new BorderWidths(10))));
+		panel.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
+				CornerRadii.EMPTY, new BorderWidths(10))));
 	}
 
 	/**
@@ -106,8 +101,7 @@ public class PlayerUi extends PlayerSystem {
 
 		Button selectButton = new Button("番号選択");
 		selectButton.setFocusTraversable(false);
-		root.getChildren().addAll(playButton, pauseButton, stopButton,
-				setButton, selectButton);
+		root.getChildren().addAll(playButton, pauseButton, stopButton, setButton, selectButton);
 
 		// 再生ボタンにイベントを登録
 		EventHandler<ActionEvent> playHandler = (e) -> {
@@ -175,12 +169,11 @@ public class PlayerUi extends PlayerSystem {
 
 			// スペグトログラム更新
 			@Override
-			public void spectrumDataUpdate(double timestamp, double duration,
-					float[] magnitudes, float[] phases) {
+			public void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes,
+					float[] phases) {
 				// 以前のリスナーを退避した場合は、先に呼び出す
 				if (beforeListener != null) {
-					beforeListener.spectrumDataUpdate(timestamp, duration,
-							magnitudes, phases);
+					beforeListener.spectrumDataUpdate(timestamp, duration, magnitudes, phases);
 				}
 
 				// 描写用クラスを取得
@@ -193,12 +186,11 @@ public class PlayerUi extends PlayerSystem {
 				for (int i = 0; i < phases.length; i += 4) {
 					// ドットを描写
 					g.setFill(Color.RED);
-					float ave = (magnitudes[i] + magnitudes[i + 1]
-							+ magnitudes[i + 2] + magnitudes[i + 3]) / 4;
+					float ave = (magnitudes[i] + magnitudes[i + 1] + magnitudes[i + 2]
+							+ magnitudes[i + 3]) / 4;
 					g.fillRect((double) i * LINE_WIDTH / 4,
-							(double) canvas.getHeight() - 30.0 - (ave + 60.0)
-									* 4, (double) LINE_WIDTH,
-							(double) (ave + 60) * 4);
+							(double) canvas.getHeight() - 30.0 - (ave + 60.0) * 4,
+							(double) LINE_WIDTH, (double) (ave + 60) * 4);
 				}
 			}
 
@@ -240,8 +232,7 @@ public class PlayerUi extends PlayerSystem {
 		// プレイヤの現在時間が変更されるたびに呼び出されるリスナを登録
 		ChangeListener<? super Number> sliderListener = (ov, old, current) -> {
 			// 動画の情報をラベル出力
-			String infoStr = String
-					.format("Vol:%4.2f", mediaPlayer.getVolume());
+			String infoStr = String.format("Vol:%4.2f", mediaPlayer.getVolume());
 			info.setText(infoStr);
 
 			// スライダにあわせてボリュームを変更
@@ -291,13 +282,10 @@ public class PlayerUi extends PlayerSystem {
 			DecimalFormat dformat = new DecimalFormat("00.0");
 			String infoStr = String.format("%2.0f:",
 					Math.floor(mediaPlayer.getCurrentTime().toMinutes()))
-					+ dformat
-							.format(mediaPlayer.getCurrentTime().toSeconds() % 60)
-					+ "/"
-					+ String.format("%2.0f:", Math.floor(mediaPlayer
-							.getTotalDuration().toMinutes()))
-					+ dformat
-							.format(mediaPlayer.getTotalDuration().toSeconds() % 60);
+					+ dformat.format(mediaPlayer.getCurrentTime().toSeconds() % 60) + "/"
+					+ String.format("%2.0f:",
+							Math.floor(mediaPlayer.getTotalDuration().toMinutes()))
+					+ dformat.format(mediaPlayer.getTotalDuration().toSeconds() % 60);
 			info.setText(infoStr);
 
 			// スライダを移動
@@ -330,8 +318,8 @@ public class PlayerUi extends PlayerSystem {
 		ToggleButton samplerButton = new ToggleButton("ポン出し");
 		samplerButton.setFocusTraversable(false);
 
-		root.getChildren().addAll(prevButton, nextButton, repeatButton,
-				x2speedButton, samplerButton);
+		root.getChildren().addAll(prevButton, nextButton, repeatButton, x2speedButton,
+				samplerButton);
 
 		// purvボタンにイベントを登録
 		EventHandler<ActionEvent> playHandler = (e) -> {
@@ -402,8 +390,8 @@ public class PlayerUi extends PlayerSystem {
 		TextField textField = new TextField(String.valueOf(playIndex + 1));
 		Button registrationButton = new Button("登録");
 		EventHandler<ActionEvent> registrationHandler = (e) -> {
-			if (main.schedules.get(Integer.parseInt(textField.getText()) - 1)
-					.getDirectry().isEmpty()) {
+			if (main.schedules.get(Integer.parseInt(textField.getText()) - 1).getDirectry()
+					.isEmpty()) {
 				// エラーメッセージ
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("エラー");
@@ -415,14 +403,12 @@ public class PlayerUi extends PlayerSystem {
 				newStage.close();
 			}
 		};
-		registrationButton.addEventHandler(ActionEvent.ACTION,
-				registrationHandler);
+		registrationButton.addEventHandler(ActionEvent.ACTION, registrationHandler);
 
 		EventHandler<KeyEvent> sceneKeyFilter = (event) -> {
 			if (event.getCode().toString() == "ENTER") {
-				if (main.schedules
-						.get(Integer.parseInt(textField.getText()) - 1)
-						.getDirectry().isEmpty()) {
+				if (main.schedules.get(Integer.parseInt(textField.getText()) - 1).getDirectry()
+						.isEmpty()) {
 				} else {
 					playIndex = Integer.parseInt(textField.getText()) - 1;
 					setPlayer();
@@ -465,12 +451,11 @@ public class PlayerUi extends PlayerSystem {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("ファイル選択ダイアログ");
 		fc.getExtensionFilters().addAll(
-				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac",
-						"*.mp4", "*.m4a", "*.flv"),
+				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac", "*.mp4", "*.m4a",
+						"*.flv"),
 				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
 				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
-				new ExtensionFilter("All Files", "*.*")
-						);
+				new ExtensionFilter("All Files", "*.*"));
 		File f = null;
 		f = fc.showOpenDialog(new Stage());
 		if (f != null) {

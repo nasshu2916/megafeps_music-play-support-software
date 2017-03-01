@@ -68,11 +68,14 @@ public class Main extends Application {
 
 		root.getChildren().add(createHeadWline());
 		ContextMenu menu = popupMenu.createPopupMenu();
-
 		Node tableNode = timeTable.creatTimeTable(this);
 		tableNode.setOnMousePressed(e -> {
 			if (e.isSecondaryButtonDown()) {
-				menu.show(mainStage, e.getScreenX(), e.getScreenY());
+				if (getTimeTable().table.getSelectionModel().getSelectedIndex() >= 0) {
+					menu.show(mainStage, e.getScreenX(), e.getScreenY());
+				}else {
+					
+				}
 			}
 		});
 		root.getChildren().add(tableNode);
@@ -80,7 +83,8 @@ public class Main extends Application {
 		timeTable.table.getSelectionModel().select(media1.getPlayIndex());
 		// timeTable.table.scrollTo(media1.getPlayIndex());
 
-		hbox1.getChildren().addAll(media1.getPanel(), media2.getPanel(), media3.getPanel(), media4.getPanel());
+		hbox1.getChildren().addAll(media1.getPanel(), media2.getPanel(), media3.getPanel(),
+				media4.getPanel());
 		root.getChildren().add(hbox1);
 
 		/* アクションイベント */
@@ -291,19 +295,22 @@ public class Main extends Application {
 		menu1_3.addEventHandler(ActionEvent.ACTION, e -> {
 			System.out.println(menu1_3.getText());
 			Platform.exit();// 終了させる
-		});
+			});
 
 		// 開く
-		menu2_2.addEventHandler(ActionEvent.ACTION, e -> {
-			new ReadFile(this);
+		menu2_2.addEventHandler(
+				ActionEvent.ACTION,
+				e -> {
+					new ReadFile(this);
 
-			DecimalFormat dformat = new DecimalFormat("00");
+					DecimalFormat dformat = new DecimalFormat("00");
 
-			for (int i = 0; i < schedules.size(); i++) {
-				timeTable.timeTableDatas.add(timeTable.setTimeTableData(dformat.format(i + 1), schedules.get(i)));
-			}
+					for (int i = 0; i < schedules.size(); i++) {
+						timeTable.timeTableDatas.add(timeTable.setTimeTableData(
+								dformat.format(i + 1), schedules.get(i)));
+					}
 
-		});
+				});
 
 		// 保存
 		menu2_3.addEventHandler(ActionEvent.ACTION, e -> {
@@ -336,7 +343,8 @@ public class Main extends Application {
 		Label correctionBeforTime = new Label("befor time");
 		Label correctionAfterTime = new Label("After time");
 		new Timecode(correctionBeforTime, "補正前 : ");
-		Timecode correctionTimecode = new Timecode(correctionAfterTime, "補正後 : ", timecode.getCorrectionTime());
+		Timecode correctionTimecode = new Timecode(correctionAfterTime, "補正後 : ",
+				timecode.getCorrectionTime());
 		correctionBeforTime.setFont(Font.font(null, FontWeight.BLACK, 24));
 		correctionBeforTime.setTextFill(Color.GREEN);
 
@@ -353,12 +361,13 @@ public class Main extends Application {
 		TextField textField = new TextField(String.valueOf(timecode.getCorrectionTime()));
 
 		Button registrationButton = new Button("登録");
-		registrationButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent e) {
-				timecode.setCorrectionTime(Integer.parseInt(textField.getText()));
-				correctionTimecode.setCorrectionTime(Integer.parseInt(textField.getText()));
-			}
-		});
+		registrationButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
+				new EventHandler<MouseEvent>() {
+					public void handle(MouseEvent e) {
+						timecode.setCorrectionTime(Integer.parseInt(textField.getText()));
+						correctionTimecode.setCorrectionTime(Integer.parseInt(textField.getText()));
+					}
+				});
 
 		hbox.getChildren().addAll(correctionTimeLabel, textField, registrationButton);
 		vbox.getChildren().addAll(hbox, correctionBeforTime, correctionAfterTime);
