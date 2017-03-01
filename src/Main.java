@@ -229,7 +229,7 @@ public class Main extends Application {
 			// 内容を指定する
 			for (int i = 0; i < schedules.size(); i++) {
 				String directryPath = schedules.get(i).getDirectry();
-				String directry = directryPath.replace(readFile.getDirectory() + "\\", "");
+				String directry = directryPath.replace(readFile.getDirectory() + "/", "");
 				System.out.println(directry + " , " + directryPath);
 				if (directry.equals(directryPath) || directry == "") {
 				} else {
@@ -242,6 +242,7 @@ public class Main extends Application {
 				bw.write(schedules.get(i).getStartTime().getSecond() + ",");
 				bw.write(schedules.get(i).getAllotTime().getMinute() + ",");
 				bw.write(schedules.get(i).getAllotTime().getSecond() + ",");
+				bw.write(schedules.get(i).getRemarks() + ",");
 				bw.newLine();
 			}
 
@@ -301,7 +302,7 @@ public class Main extends Application {
 		menu2_2.addEventHandler(
 				ActionEvent.ACTION,
 				e -> {
-					new ReadFile(this);
+					readFile = new ReadFile(this);
 
 					DecimalFormat dformat = new DecimalFormat("00");
 

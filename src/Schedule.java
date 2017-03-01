@@ -14,11 +14,12 @@ public class Schedule extends Time{
 		this.remarks = remarks;
 	}
 	
-	Schedule(String directory, String fileName, StartTime startTime, AllotTime allotTime) {
+	Schedule(String directory, String fileName, StartTime startTime, AllotTime allotTime,String remarks) {
 		this.directory = directory;
 		this.fileName = fileName;
 		this.startTime = startTime;
 		this.allotTime = allotTime;
+		this.remarks = remarks;
 	}
 
 	public String getDirectry() {
