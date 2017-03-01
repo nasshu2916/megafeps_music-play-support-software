@@ -1,4 +1,3 @@
-
 import java.io.File;
 
 import javafx.scene.control.Label;
@@ -21,11 +20,12 @@ public class PlayerSystem {
 	protected Label fileName;
 	protected Media media;
 
-	protected File getfFileName() {
-		return new File(main.schedules.get(playIndex).getDirectry() + "/"
-				+ main.schedules.get(playIndex).getFileName());
+	protected File getFileName() {
+		Schedule schedule = main.schedules.get(playIndex);
+		return new File(schedule.getDirectry() + "/" + schedule.getFileName());
 	}
 
+	//拡張子を取得
 	protected static String getSuffix(String fileName) {
 		if (fileName == null)
 			return null;

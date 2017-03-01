@@ -47,7 +47,7 @@ public class Popup {
 		MenuItem menu3 = new MenuItem("イベントの追加");
 		MenuItem menu4 = new MenuItem("イベントの削除");
 		MenuItem menu5 = new MenuItem("イベントの変更");
-		// menu1.setDisable(true);
+		//menu1.setDisable(true);
 
 		menu1.getItems().addAll(menu1_2, menu1_3, menu1_4, menu1_5);
 		menu.getItems().addAll(menu1, menu2, menu3, menu4, menu5);
@@ -70,9 +70,7 @@ public class Popup {
 
 		menu4.addEventHandler(ActionEvent.ACTION, e -> {
 			int selectNum = main.getTimeTable().table.getSelectionModel().getSelectedIndex();
-			if (selectNum < 0 ) {
-				selectNum = 0;
-			}
+			
 			main.getSchedules().remove(selectNum);
 			main.getTimeTable().timeTableDatas.remove(selectNum);
 			for (int i = selectNum; i < main.getTimeTable().timeTableDatas.size(); i++) {
@@ -190,7 +188,7 @@ public class Popup {
 
 			main.getSchedules().add(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
 					new Schedule(directoryTextField.getText(), fileTextField.getText(), startHour, startMinute,
-							startSecond, allotMinute, allotSecond));
+							startSecond, allotMinute, allotSecond,""));
 			main.getTimeTable().timeTableDatas.add(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
 					main.getTimeTable().setTimeTableData(
 							dformat.format(main.getTimeTable().table.getSelectionModel().getSelectedIndex() + 1),
@@ -336,7 +334,7 @@ public class Popup {
 
 			main.getSchedules().set(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
 					new Schedule(directoryTextField.getText(), fileTextField.getText(), startHour, startMinute,
-							startSecond, allotMinute, allotSecond));
+							startSecond, allotMinute, allotSecond,""));
 			main.getTimeTable().timeTableDatas.set(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
 					main.getTimeTable().setTimeTableData(
 							dformat.format(main.getTimeTable().table.getSelectionModel().getSelectedIndex() + 1),

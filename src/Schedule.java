@@ -3,13 +3,15 @@ public class Schedule extends Time{
 	private String fileName;
 	private StartTime startTime;
 	private AllotTime allotTime;
+	private String remarks;
 
 	Schedule(String directory, String fileName, int startHour, int startMinute,
-			int startSecond, int allotMinute, int allotSecond) {
+			int startSecond, int allotMinute, int allotSecond,String remarks) {
 		this.directory = directory;
 		this.fileName = fileName;
 		startTime = new StartTime(startHour, startMinute, startSecond);
 		allotTime = new AllotTime(allotMinute, allotSecond);
+		this.remarks = remarks;
 	}
 	
 	Schedule(String directory, String fileName, StartTime startTime, AllotTime allotTime) {
@@ -41,6 +43,14 @@ public class Schedule extends Time{
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+	
+	public String getRemarks() {
+		return remarks;
+	}
+	
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 	
 }

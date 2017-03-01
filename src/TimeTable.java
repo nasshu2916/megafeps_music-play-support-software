@@ -25,6 +25,7 @@ public class TimeTable extends Time{
 		TableColumn<TimeTableData, String> fileName = new TableColumn<TimeTableData, String>("ファイル名");
 		TableColumn<TimeTableData, String> startTime = new TableColumn<TimeTableData, String>("開始時間");
 		TableColumn<TimeTableData, String> allortTime = new TableColumn<TimeTableData, String>("持ち時間");
+		TableColumn<TimeTableData, String> remarks = new TableColumn<TimeTableData, String>("備考");
 		scriptNumber.setCellValueFactory(new PropertyValueFactory<>("element1"));
 		scriptNumber.setSortable(false);
 		directryName.setCellValueFactory(new PropertyValueFactory<>("element2_1"));
@@ -35,8 +36,10 @@ public class TimeTable extends Time{
 		startTime.setSortable(false);
 		allortTime.setCellValueFactory(new PropertyValueFactory<>("element4"));
 		allortTime.setSortable(false);
+		remarks.setCellValueFactory(new PropertyValueFactory<>("element5"));
+		remarks.setSortable(false);
 		file.getColumns().addAll(directryName, fileName);
-		table.getColumns().addAll(scriptNumber, startTime, allortTime, file);
+		table.getColumns().addAll(scriptNumber, startTime, allortTime, file,remarks);
 
 		for (int i = 0; i < main.schedules.size(); i++) {
 			timeTableDatas.add(new TimeTableData(dformat.format(i + 1), main.schedules.get(i)));
@@ -73,6 +76,7 @@ public class TimeTable extends Time{
 		private String fileName;
 		private String StartTime;
 		private String allottedTime;
+		private String remarks;
 
 		TimeTableData(String number, String directoryPath, String fileName, String StartTime, String allottedTile) {
 			this.number = number;
@@ -88,6 +92,7 @@ public class TimeTable extends Time{
 			fileName = schedule.getFileName();
 			StartTime = schedule.getStartTime().getStringTime();
 			allottedTime = schedule.getAllotTime().getStringTime();
+			remarks = schedule.getRemarks();
 		}
 		
 		public TimeTableData(String num,Schedule schedule) {
@@ -96,6 +101,7 @@ public class TimeTable extends Time{
 			fileName = schedule.getFileName();
 			StartTime = schedule.getStartTime().getStringTime();
 			allottedTime = schedule.getAllotTime().getStringTime();
+			remarks = schedule.getRemarks();
 		}
 
 		public void setNumber(String number) {
@@ -140,6 +146,14 @@ public class TimeTable extends Time{
 
 		public void setElement4(String time) {
 			this.allottedTime = time;
+		}
+		
+		public String getElement5() {
+			return remarks;
+		}
+
+		public void setElement5(String remarks) {
+			this.remarks = remarks;
 		}
 	}
 }

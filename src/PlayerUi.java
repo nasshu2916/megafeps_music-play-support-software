@@ -45,7 +45,7 @@ public class PlayerUi extends PlayerSystem {
 	private int panelwide = 1200 / 4 - 20;
 
 	protected void createPlayerWindow() {
-		File file = getfFileName();
+		File file = getFileName();
 		if (!file.exists()) {
 			System.out.println("ファイルは存在しません");
 			return;

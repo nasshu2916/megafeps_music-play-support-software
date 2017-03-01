@@ -33,8 +33,7 @@ public class ReadFile {
 			FileChooser fc = new FileChooser();
 			fc.setInitialDirectory(f);
 			fc.setTitle("台本を選択してください");
-			fc.getExtensionFilters().addAll(
-					new ExtensionFilter("タイムテーブル", "*.csv"));
+			fc.getExtensionFilters().addAll(new ExtensionFilter("タイムテーブル", "*.csv"));
 
 			f = fc.showOpenDialog(new Stage());
 			if (f != null) {
@@ -45,28 +44,23 @@ public class ReadFile {
 			}
 
 			// SJISを指定
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					new FileInputStream(programDataFile), "SJIS"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(
+					programDataFile), "SJIS"));
 
 			// 読み込んだファイルを1行ずつ処理する
 			String s;
 			while ((s = br.readLine()) != null) {
 				// 区切り文字","で分割する
-				String[] fruit = s.split(",", 0);
+				String[] fruit = s.split(",", -1);
 				if (fruit[0].equals("")) {
-					main.schedules.add(new Schedule("", fruit[1], Integer
-							.parseInt(fruit[2]), Integer.parseInt(fruit[3]),
-							Integer.parseInt(fruit[4]), Integer
-									.parseInt(fruit[5]), Integer
-									.parseInt(fruit[6])));
+					main.schedules.add(new Schedule("", fruit[1], Integer.parseInt(fruit[2]),
+							Integer.parseInt(fruit[3]), Integer.parseInt(fruit[4]), Integer
+									.parseInt(fruit[5]), Integer.parseInt(fruit[6]), fruit[7]));
 				} else {
-					main.schedules.add(new Schedule(
-							directory + "/" + fruit[0], fruit[1], Integer
-									.parseInt(fruit[2]), Integer
-									.parseInt(fruit[3]), Integer
-									.parseInt(fruit[4]), Integer
-									.parseInt(fruit[5]), Integer
-									.parseInt(fruit[6])));
+					main.schedules.add(new Schedule(directory + "/" + fruit[0], fruit[1], Integer
+							.parseInt(fruit[2]), Integer.parseInt(fruit[3]), Integer
+							.parseInt(fruit[4]), Integer.parseInt(fruit[5]), Integer
+							.parseInt(fruit[6]), fruit[7]));
 				}
 
 			}
