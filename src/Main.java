@@ -83,8 +83,8 @@ public class Main extends Application {
 		timeTable.table.getSelectionModel().select(media1.getPlayIndex());
 		// timeTable.table.scrollTo(media1.getPlayIndex());
 
-		hbox1.getChildren().addAll(media1.getPanel(), media2.getPanel(), media3.getPanel(),
-				media4.getPanel());
+		hbox1.getChildren().addAll(media1.getPlayerPanel(), media2.getPlayerPanel(), media3.getPlayerPanel(),
+				media4.getPlayerPanel());
 		root.getChildren().add(hbox1);
 
 		/* アクションイベント */
