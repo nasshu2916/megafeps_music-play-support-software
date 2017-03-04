@@ -40,10 +40,14 @@ import javafx.util.Duration;
 public class PlayerUi extends PlayerSystem {
 
 	private int panelwide = 1200 / 4 - 20;
-	
-	
-	public PlayerUi(){
-		
+
+	public PlayerUi() {
+		media = null;
+		mediaPlayer = null;
+		playerPanel.getChildren().addAll(new Label("ファイルは存在しません"));
+		playerPanel.setMinWidth(300);
+		playerPanel.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+				CornerRadii.EMPTY, new BorderWidths(10))));
 	}
 
 	protected void createPlayerWindow() {
@@ -55,7 +59,7 @@ public class PlayerUi extends PlayerSystem {
 			playerPanel.setMinWidth(300);
 			playerPanel.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
 					CornerRadii.EMPTY, new BorderWidths(10))));
-		}else {
+		} else {
 			createPlayerWindow(file);
 		}
 	}
@@ -65,7 +69,7 @@ public class PlayerUi extends PlayerSystem {
 		mediaPlayer = new MediaPlayer(media);
 		fileName = new Label(String.valueOf(playIndex + 1) + "\t曲名 : " + file.getName());
 		fileName.setFont(Font.font(null, FontWeight.BLACK, 16));
-		
+
 		// スペクトル表示
 		if (getSuffix(file.toURI().toString()).equals("mp4")) {
 			MediaView mediaView = new MediaView(mediaPlayer);
@@ -76,12 +80,12 @@ public class PlayerUi extends PlayerSystem {
 		}
 
 		// 再生・停止・繰り返しボタン作成
-		
+
 		// 時間表示スライダ作成
 		// ボリューム表示スライダ作成
-		playerPanel.getChildren().addAll(fileName,spectrum,createButton(mediaPlayer), createTimeSlider(),
-				createVolumeSlider(), createPlaylistButton(mediaPlayer));
-		
+		playerPanel.getChildren().addAll(fileName, spectrum, createButton(mediaPlayer),
+				createTimeSlider(), createVolumeSlider(), createPlaylistButton(mediaPlayer));
+
 		playerPanel.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
 				CornerRadii.EMPTY, new BorderWidths(10))));
 	}
@@ -191,11 +195,9 @@ public class PlayerUi extends PlayerSystem {
 				for (int i = 0; i < phases.length; i += 4) {
 					// ドットを描写
 					g.setFill(Color.RED);
-					float ave = (magnitudes[i] + magnitudes[i + 1] + magnitudes[i + 2]
-							+ magnitudes[i + 3]) / 4;
-					g.fillRect((double) i * LINE_WIDTH / 4,
-							(double) canvas.getHeight() - 30.0 - (ave + 60.0) * 4,
-							(double) LINE_WIDTH, (double) (ave + 60) * 4);
+					float ave = (magnitudes[i] + magnitudes[i + 1] + magnitudes[i + 2] + magnitudes[i + 3]) / 4;
+					g.fillRect((double) i * LINE_WIDTH / 4, (double) canvas.getHeight() - 30.0
+							- (ave + 60.0) * 4, (double) LINE_WIDTH, (double) (ave + 60) * 4);
 				}
 			}
 
@@ -287,7 +289,8 @@ public class PlayerUi extends PlayerSystem {
 			DecimalFormat dformat = new DecimalFormat("00.0");
 			String infoStr = String.format("%2.0f:",
 					Math.floor(mediaPlayer.getCurrentTime().toMinutes()))
-					+ dformat.format(mediaPlayer.getCurrentTime().toSeconds() % 60) + "/"
+					+ dformat.format(mediaPlayer.getCurrentTime().toSeconds() % 60)
+					+ "/"
 					+ String.format("%2.0f:",
 							Math.floor(mediaPlayer.getTotalDuration().toMinutes()))
 					+ dformat.format(mediaPlayer.getTotalDuration().toSeconds() % 60);
@@ -446,11 +449,11 @@ public class PlayerUi extends PlayerSystem {
 
 	public void setPlayer(int playIndex) {
 		if (main.schedules.get(playIndex).getDirectry().isEmpty()) {
-		} else if(mediaPlayer == null){
+		} else if (mediaPlayer == null) {
 			this.playIndex = playIndex;
 			playerPanel.getChildren().clear();
 			createPlayerWindow();
-		}else {
+		} else {
 			this.playIndex = playIndex;
 			setPlayer();
 		}
@@ -461,8 +464,7 @@ public class PlayerUi extends PlayerSystem {
 		fc.setTitle("ファイル選択ダイアログ");
 		fc.getExtensionFilters().addAll(
 				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac", "*.mp4", "*.m4a",
-						"*.flv"),
-				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+						"*.flv"), new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
 				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
 				new ExtensionFilter("All Files", "*.*"));
 		File f = fc.showOpenDialog(new Stage());

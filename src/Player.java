@@ -5,12 +5,12 @@ public class Player extends PlayerUi {
 	Player(Main main, int playerNumber) {
 		this.main = main;
 		this.playerNumber = playerNumber;
-		createPlayerWindow();
+		// createPlayerWindow();
 	}
 
 	Player(Main main) {
 		this.main = main;
-		createPlayerWindow();
+		// createPlayerWindow();
 	}
 
 	public VBox getPlayerPanel() {

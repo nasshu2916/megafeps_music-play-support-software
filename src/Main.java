@@ -38,7 +38,8 @@ import javafx.stage.WindowEvent;
 public class Main extends Application {
 	private Popup popupMenu = new Popup(this);
 	public List<Schedule> schedules = new ArrayList<Schedule>();
-	private ReadFile readFile = new ReadFile(this);
+	private ReadFile readFile;
+	// private ReadFile readFile = new ReadFile(this);
 
 	private TimeTable timeTable = new TimeTable();
 
@@ -66,7 +67,7 @@ public class Main extends Application {
 
 		root.getChildren().add(createHeadWline());
 		ContextMenu menu = popupMenu.createPopupMenu();
-		ContextMenu firstMenu = popupMenu.firstPopupMenu();//スケジュールが無い時用のポップアップメニュー
+		ContextMenu firstMenu = popupMenu.firstPopupMenu();// スケジュールが無い時用のポップアップメニュー
 		Node tableNode = timeTable.creatTimeTable(this);
 		tableNode.setOnMousePressed(e -> {
 			if (e.isSecondaryButtonDown()) {
@@ -74,18 +75,18 @@ public class Main extends Application {
 				popupMenu.setSelectNum(selectNum);
 				if (selectNum >= 0) {
 					menu.show(mainStage, e.getScreenX(), e.getScreenY());
-				}else {
+				} else {
 					firstMenu.show(mainStage, e.getScreenX(), e.getScreenY());
 				}
 			}
 		});
 		root.getChildren().add(tableNode);
 
-//		timeTable.table.getSelectionModel().select(media1.getPlayIndex());
+		// timeTable.table.getSelectionModel().select(media1.getPlayIndex());
 		// timeTable.table.scrollTo(media1.getPlayIndex());
 
-		hbox1.getChildren().addAll(media1.getPlayerPanel(), media2.getPlayerPanel(), media3.getPlayerPanel(),
-				media4.getPlayerPanel());
+		hbox1.getChildren().addAll(media1.getPlayerPanel(), media2.getPlayerPanel(),
+				media3.getPlayerPanel(), media4.getPlayerPanel());
 		root.getChildren().add(hbox1);
 
 		/* アクションイベント */

@@ -185,15 +185,14 @@ public class Popup {
 			main.getTimeTable().timeTableDatas.add(
 					setNum,
 					main.getTimeTable().setTimeTableData(
-							dformat.format(main.getTimeTable().table.getSelectionModel()
-									.getSelectedIndex() + 1),
+							dformat.format(setNum),
 							directoryTextField.getText(),
 							fileTextField.getText(),
 							String.valueOf(startHour) + ":" + dformat.format(startMinute) + ":"
 									+ dformat.format(startSecond),
 							String.valueOf(allotMinute) + ":" + dformat.format(allotSecond)));
-			for (int i = main.getTimeTable().table.getSelectionModel()// 番号を修正
-					.getSelectedIndex(); i < main.getTimeTable().timeTableDatas.size(); i++) {
+			// 番号を修正
+			for (int i = setNum; i < main.getTimeTable().timeTableDatas.size(); i++) {
 				main.getTimeTable().timeTableDatas.get(i).setNumber(dformat.format(i + 1));
 			}
 			newEvent.close();
@@ -293,8 +292,7 @@ public class Popup {
 			main.getTimeTable().timeTableDatas.set(
 					selectNum,
 					main.getTimeTable().setTimeTableData(
-							dformat.format(main.getTimeTable().table.getSelectionModel()
-									.getSelectedIndex() + 1),
+							dformat.format(selectNum + 1),
 							directoryTextField.getText(),
 							fileTextField.getText(),
 							String.valueOf(startHour) + ":" + dformat.format(startMinute) + ":"
