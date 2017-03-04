@@ -59,7 +59,6 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage mainStage) {
-
 		// ディスプレイサイズを取得
 		VBox root = new VBox();
 		HBox hbox1 = new HBox();
@@ -68,13 +67,16 @@ public class Main extends Application {
 
 		root.getChildren().add(createHeadWline());
 		ContextMenu menu = popupMenu.createPopupMenu();
+		ContextMenu firstMenu = popupMenu.firstPopupMenu();//スケジュールが無い時用のポップアップメニュー
 		Node tableNode = timeTable.creatTimeTable(this);
 		tableNode.setOnMousePressed(e -> {
 			if (e.isSecondaryButtonDown()) {
-				if (getTimeTable().table.getSelectionModel().getSelectedIndex() >= 0) {
+				int selectNum = getTimeTable().table.getSelectionModel().getSelectedIndex();
+				popupMenu.setSelectNum(selectNum);
+				if (selectNum >= 0) {
 					menu.show(mainStage, e.getScreenX(), e.getScreenY());
 				}else {
-					
+					firstMenu.show(mainStage, e.getScreenX(), e.getScreenY());
 				}
 			}
 		});
@@ -83,8 +85,8 @@ public class Main extends Application {
 		timeTable.table.getSelectionModel().select(media1.getPlayIndex());
 		// timeTable.table.scrollTo(media1.getPlayIndex());
 
-		hbox1.getChildren().addAll(media1.getPanel(), media2.getPanel(), media3.getPanel(),
-				media4.getPanel());
+		hbox1.getChildren().addAll(media1.getPlayerPanel(), media2.getPlayerPanel(), media3.getPlayerPanel(),
+				media4.getPlayerPanel());
 		root.getChildren().add(hbox1);
 
 		/* アクションイベント */
@@ -229,7 +231,7 @@ public class Main extends Application {
 			// 内容を指定する
 			for (int i = 0; i < schedules.size(); i++) {
 				String directryPath = schedules.get(i).getDirectry();
-				String directry = directryPath.replace(readFile.getDirectory() + "\\", "");
+				String directry = directryPath.replace(readFile.getDirectory() + "/", "");
 				System.out.println(directry + " , " + directryPath);
 				if (directry.equals(directryPath) || directry == "") {
 				} else {
@@ -242,6 +244,7 @@ public class Main extends Application {
 				bw.write(schedules.get(i).getStartTime().getSecond() + ",");
 				bw.write(schedules.get(i).getAllotTime().getMinute() + ",");
 				bw.write(schedules.get(i).getAllotTime().getSecond() + ",");
+				bw.write(schedules.get(i).getRemarks() + ",");
 				bw.newLine();
 			}
 
@@ -301,7 +304,7 @@ public class Main extends Application {
 		menu2_2.addEventHandler(
 				ActionEvent.ACTION,
 				e -> {
-					new ReadFile(this);
+					readFile = new ReadFile(this);
 
 					DecimalFormat dformat = new DecimalFormat("00");
 

@@ -38,7 +38,7 @@ public class ReadFile {
 			f = fc.showOpenDialog(new Stage());
 			if (f != null) {
 				programDataFile = f;
-				System.out.print(f);
+				System.out.println(f);
 			} else {
 				System.out.println("台本が選択されていません");
 			}

@@ -1,6 +1,8 @@
 import java.io.File;
 
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -14,7 +16,10 @@ import javafx.scene.paint.Color;
 public class PlayerSystem {
 	protected Main main;
 	protected MediaPlayer mediaPlayer;
-	protected VBox panel = new VBox();
+	protected VBox playerPanel = new VBox();
+	protected Node spectrum = null; // スペクトル表示ノード
+	protected Slider volumeSlider;
+	
 	protected int playerNumber;
 	protected int playIndex = 0;
 	protected Label fileName;
@@ -37,7 +42,7 @@ public class PlayerSystem {
 	}
 
 	protected void setBorderColor(Color color) {
-		panel.setBorder(new Border(new BorderStroke(color, BorderStrokeStyle.SOLID,
+		playerPanel.setBorder(new Border(new BorderStroke(color, BorderStrokeStyle.SOLID,
 				CornerRadii.EMPTY, new BorderWidths(10))));
 	}
 

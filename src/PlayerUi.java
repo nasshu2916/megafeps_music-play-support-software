@@ -39,9 +39,6 @@ import javafx.util.Duration;
 
 public class PlayerUi extends PlayerSystem {
 
-	private Node spectrum = null; // スペクトル表示ノード
-	private Slider volumeSlider;
-
 	private int panelwide = 1200 / 4 - 20;
 
 	protected void createPlayerWindow() {
@@ -58,26 +55,26 @@ public class PlayerUi extends PlayerSystem {
 		mediaPlayer = new MediaPlayer(media);
 		fileName = new Label(String.valueOf(playIndex + 1) + "\t曲名 : " + file.getName());
 		fileName.setFont(Font.font(null, FontWeight.BLACK, 16));
-		panel.getChildren().add(fileName);
+		playerPanel.getChildren().add(fileName);
 
 		// スペクトル表示
 
 		if (getSuffix(file.toURI().toString()).equals("mp4")) {
 			MediaView mediaView = new MediaView(mediaPlayer);
 			mediaView.setFitWidth(panelwide);
-			panel.getChildren().add(mediaView);
+			spectrum = mediaView;
 		} else {
 			createSpectrum();
-			panel.getChildren().add(spectrum);
 		}
 
 		// 再生・停止・繰り返しボタン作成
+		
 		// 時間表示スライダ作成
 		// ボリューム表示スライダ作成
-		panel.getChildren().addAll(createButton(mediaPlayer), createTimeSlider(),
+		playerPanel.getChildren().addAll(fileName,spectrum,createButton(mediaPlayer), createTimeSlider(),
 				createVolumeSlider(), createPlaylistButton(mediaPlayer));
 
-		panel.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
+		playerPanel.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
 				CornerRadii.EMPTY, new BorderWidths(10))));
 	}
 
@@ -428,14 +425,14 @@ public class PlayerUi extends PlayerSystem {
 	private void setPlayer() {
 		mediaPlayer.stop();
 		mediaPlayer = null;
-		panel.getChildren().clear();
+		playerPanel.getChildren().clear();
 		createPlayerWindow();
 	}
 
 	private void setPlayer(File f) {
 		mediaPlayer.stop();
 		mediaPlayer = null;
-		panel.getChildren().clear();
+		playerPanel.getChildren().clear();
 		createPlayerWindow(f);
 	}
 

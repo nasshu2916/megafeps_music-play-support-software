@@ -20,7 +20,9 @@ import javafx.stage.Stage;
 
 public class Popup {
 
-	Main main;
+	private Main main;
+	private int selectNum;
+
 	private DecimalFormat dformat = new DecimalFormat("00");
 
 	Popup(Main main) {
@@ -44,33 +46,40 @@ public class Popup {
 		MenuItem menu1_4 = new MenuItem("プレイヤー3");
 		MenuItem menu1_5 = new MenuItem("プレイヤー4");
 		MenuItem menu2 = new SeparatorMenuItem();
-		MenuItem menu3 = new MenuItem("イベントの追加");
+		Menu menu3 = new Menu("イベントの追加");
+		MenuItem menu3_1 = new MenuItem("選択項目の前に追加");
+		MenuItem menu3_2 = new MenuItem("選択項目の後に追加");
 		MenuItem menu4 = new MenuItem("イベントの削除");
 		MenuItem menu5 = new MenuItem("イベントの変更");
-		//menu1.setDisable(true);
+		// menu1.setDisable(true);
 
 		menu1.getItems().addAll(menu1_2, menu1_3, menu1_4, menu1_5);
+		menu3.getItems().addAll(menu3_1, menu3_2);
 		menu.getItems().addAll(menu1, menu2, menu3, menu4, menu5);
+
 		// イベントハンドラはMenuItemに設定
 		menu1_2.addEventHandler(ActionEvent.ACTION, e -> {
-			main.getMedia(0).setPlayer(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
+			main.getMedia(0).setPlayer(selectNum);
 		});
 		menu1_3.addEventHandler(ActionEvent.ACTION, e -> {
-			main.getMedia(1).setPlayer(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
+			main.getMedia(1).setPlayer(selectNum);
 		});
 		menu1_4.addEventHandler(ActionEvent.ACTION, e -> {
-			main.getMedia(2).setPlayer(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
+			main.getMedia(2).setPlayer(selectNum);
 		});
 		menu1_5.addEventHandler(ActionEvent.ACTION, e -> {
-			main.getMedia(3).setPlayer(main.getTimeTable().table.getSelectionModel().getSelectedIndex());
+			main.getMedia(3).setPlayer(selectNum);
 		});
-		menu3.addEventHandler(ActionEvent.ACTION, e -> {
-			setNewEventWindow();
+
+		menu3_1.addEventHandler(ActionEvent.ACTION, e -> {
+			setNewEventWindow(selectNum);
+		});
+
+		menu3_2.addEventHandler(ActionEvent.ACTION, e -> {
+			setNewEventWindow(selectNum + 1);
 		});
 
 		menu4.addEventHandler(ActionEvent.ACTION, e -> {
-			int selectNum = main.getTimeTable().table.getSelectionModel().getSelectedIndex();
-			
 			main.getSchedules().remove(selectNum);
 			main.getTimeTable().timeTableDatas.remove(selectNum);
 			for (int i = selectNum; i < main.getTimeTable().timeTableDatas.size(); i++) {
@@ -79,26 +88,38 @@ public class Popup {
 		});
 
 		menu5.addEventHandler(ActionEvent.ACTION, e -> {
-			chengeEventData();
+			chengeEventData(selectNum);
 		});
 		return menu;
 	}
 
-	private void setNewEventWindow() {
+	public ContextMenu firstPopupMenu() {
+		// メニュー
+		ContextMenu menu = new ContextMenu();
+
+		// メニューFileを、一般メニューとして作成
+		// 各メニューにはイメージを付与することが可能
+		MenuItem menu1 = new MenuItem("イベントの追加");
+		// menu1.setDisable(true);
+
+		menu.getItems().add(menu1);
+
+		menu1.addEventHandler(ActionEvent.ACTION, e -> {
+			setNewEventWindow(selectNum + 1);
+		});
+
+		return menu;
+	}
+
+	private void setNewEventWindow(int setNum) {
 
 		FileChooser fc = new FileChooser();
 		fc.setTitle("ファイルを選択してください");
 		fc.getExtensionFilters().addAll(
-				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac", "*.mp4", "*.m4a", "*.flv"),
-				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
-				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"), new ExtensionFilter("All Files", "*.*"));
-
-		File file = fc.showOpenDialog(new Stage());
-
-		if (file == null) {
-			// ファイルが選択されてない場合
-			return;
-		}
+				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac", "*.mp4", "*.m4a",
+						"*.flv"), new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
+				new ExtensionFilter("All Files", "*.*"));
 
 		Stage newEvent = new Stage();
 		HBox hboxDirectory = new HBox(10);
@@ -112,43 +133,14 @@ public class Popup {
 		Label directoryLabel = new Label("ディレクトリ\t");
 		Label fileLabel = new Label("ファイル名\t");
 
-		TextField directoryTextField = new TextField(file.getParent());
-		TextField fileTextField = new TextField(file.getName());
+		TextField directoryTextField = new TextField();
+		TextField fileTextField = new TextField();
 
 		Label startTimeLabel = new Label("開始時間\t");
 		Label allotTimeLabel = new Label("持ち時間\t");
-		final TextField startTimeTextField = new TextField() {
-			@Override
-			public void replaceText(int start, int end, String text) {
-				if (!text.matches("[a-z, A-Z]")) {
-					super.replaceText(start, end, text);
-				}
-			}
 
-			@Override
-			public void replaceSelection(String text) {
-				if (!text.matches("[a-z, A-Z]")) {
-					super.replaceSelection(text);
-				}
-			}
-		};
 		startTimeTextField.setPrefWidth(100);
 
-		final TextField allotTimeTextField = new TextField() {
-			@Override
-			public void replaceText(int start, int end, String text) {
-				if (!text.matches("[a-z, A-Z]")) {
-					super.replaceText(start, end, text);
-				}
-			}
-
-			@Override
-			public void replaceSelection(String text) {
-				if (!text.matches("[a-z, A-Z]")) {
-					super.replaceSelection(text);
-				}
-			}
-		};
 		allotTimeTextField.setPrefWidth(100);
 
 		Button fileChangeButton = new Button("ファイル変更");
@@ -186,13 +178,17 @@ public class Popup {
 			allotSecond = allotTime % 100;
 			allotMinute = allotTime / 100;
 
-			main.getSchedules().add(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
-					new Schedule(directoryTextField.getText(), fileTextField.getText(), startHour, startMinute,
-							startSecond, allotMinute, allotSecond,""));
-			main.getTimeTable().timeTableDatas.add(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
+			main.getSchedules().add(
+					setNum,
+					new Schedule(directoryTextField.getText(), fileTextField.getText(), startHour,
+							startMinute, startSecond, allotMinute, allotSecond, ""));
+			main.getTimeTable().timeTableDatas.add(
+					setNum,
 					main.getTimeTable().setTimeTableData(
-							dformat.format(main.getTimeTable().table.getSelectionModel().getSelectedIndex() + 1),
-							directoryTextField.getText(), fileTextField.getText(),
+							dformat.format(main.getTimeTable().table.getSelectionModel()
+									.getSelectedIndex() + 1),
+							directoryTextField.getText(),
+							fileTextField.getText(),
 							String.valueOf(startHour) + ":" + dformat.format(startMinute) + ":"
 									+ dformat.format(startSecond),
 							String.valueOf(allotMinute) + ":" + dformat.format(allotSecond)));
@@ -214,20 +210,21 @@ public class Popup {
 		hboxStartTime.getChildren().addAll(startTimeLabel, startTimeTextField);
 		hboxAllotTime.getChildren().addAll(allotTimeLabel, allotTimeTextField);
 		hboxBottumSelect.getChildren().addAll(registrationButton, CancelButton);
-		vbox.getChildren().addAll(hboxDirectory, hboxFile, fileChangeButton, hboxStartTime, hboxAllotTime,
-				hboxBottumSelect);
+		vbox.getChildren().addAll(hboxDirectory, hboxFile, fileChangeButton, hboxStartTime,
+				hboxAllotTime, hboxBottumSelect);
 		newEvent.setScene(scene);
 		newEvent.initModality(Modality.APPLICATION_MODAL);
 		newEvent.show();
 	}
 
-	private void chengeEventData() {
+	private void chengeEventData(int selectNum) {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("ファイルを選択してください");
 		fc.getExtensionFilters().addAll(
-				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac", "*.mp4", "*.m4a", "*.flv"),
-				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
-				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"), new ExtensionFilter("All Files", "*.*"));
+				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac", "*.mp4", "*.m4a",
+						"*.flv"), new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
+				new ExtensionFilter("All Files", "*.*"));
 
 		Stage newEvent = new Stage();
 		HBox hboxDirectory = new HBox(10);
@@ -241,59 +238,16 @@ public class Popup {
 		Label directoryLabel = new Label("ディレクトリ\t");
 		Label fileLabel = new Label("ファイル名\t");
 
-		TextField directoryTextField = new TextField(main.getTimeTable().timeTableDatas
-				.get(main.getTimeTable().table.getSelectionModel().getSelectedIndex()).getElement2_1());
-		TextField fileTextField = new TextField(main.getTimeTable().timeTableDatas
-				.get(main.getTimeTable().table.getSelectionModel().getSelectedIndex()).getElement2_2());
+		TextField directoryTextField = new TextField(main.getTimeTable().timeTableDatas.get(
+				selectNum).getElement2_1());
+		TextField fileTextField = new TextField(main.getTimeTable().timeTableDatas.get(selectNum)
+				.getElement2_2());
 
 		Label startTimeLabel = new Label("開始時間\t");
 		Label allotTimeLabel = new Label("持ち時間\t");
 
-		final TextField startTimeTextField = new TextField(String
-				.valueOf(main.getSchedules().get(main.getTimeTable().table.getSelectionModel().getSelectedIndex())
-						.getStartTime().getHour())
-				+ dformat.format(
-						main.getSchedules().get(main.getTimeTable().table.getSelectionModel().getSelectedIndex())
-								.getStartTime().getMinute())
-				+ dformat.format(
-						main.getSchedules().get(main.getTimeTable().table.getSelectionModel().getSelectedIndex())
-								.getStartTime().getSecond())) {
-			@Override
-			public void replaceText(int start, int end, String text) {
-				if (!text.matches("[a-z, A-Z]")) {
-					super.replaceText(start, end, text);
-				}
-			}
-
-			@Override
-			public void replaceSelection(String text) {
-				if (!text.matches("[a-z, A-Z]")) {
-					super.replaceSelection(text);
-				}
-			}
-		};
 		startTimeTextField.setPrefWidth(100);
 
-		final TextField allotTimeTextField = new TextField(String
-				.valueOf(main.getSchedules().get(main.getTimeTable().table.getSelectionModel().getSelectedIndex())
-						.getAllotTime().getMinute())
-				+ dformat.format(
-						main.getSchedules().get(main.getTimeTable().table.getSelectionModel().getSelectedIndex())
-								.getAllotTime().getSecond())) {
-			@Override
-			public void replaceText(int start, int end, String text) {
-				if (!text.matches("[a-z, A-Z]")) {
-					super.replaceText(start, end, text);
-				}
-			}
-
-			@Override
-			public void replaceSelection(String text) {
-				if (!text.matches("[a-z, A-Z]")) {
-					super.replaceSelection(text);
-				}
-			}
-		};
 		allotTimeTextField.setPrefWidth(100);
 
 		Button fileChangeButton = new Button("ファイル変更");
@@ -332,17 +286,21 @@ public class Popup {
 			allotSecond = allotTime % 100;
 			allotMinute = allotTime / 100;
 
-			main.getSchedules().set(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
-					new Schedule(directoryTextField.getText(), fileTextField.getText(), startHour, startMinute,
-							startSecond, allotMinute, allotSecond,""));
-			main.getTimeTable().timeTableDatas.set(main.getTimeTable().table.getSelectionModel().getSelectedIndex(),
+			main.getSchedules().set(
+					selectNum,
+					new Schedule(directoryTextField.getText(), fileTextField.getText(), startHour,
+							startMinute, startSecond, allotMinute, allotSecond, ""));
+			main.getTimeTable().timeTableDatas.set(
+					selectNum,
 					main.getTimeTable().setTimeTableData(
-							dformat.format(main.getTimeTable().table.getSelectionModel().getSelectedIndex() + 1),
-							directoryTextField.getText(), fileTextField.getText(),
+							dformat.format(main.getTimeTable().table.getSelectionModel()
+									.getSelectedIndex() + 1),
+							directoryTextField.getText(),
+							fileTextField.getText(),
 							String.valueOf(startHour) + ":" + dformat.format(startMinute) + ":"
 									+ dformat.format(startSecond),
 							String.valueOf(allotMinute) + ":" + dformat.format(allotSecond)));
-			
+
 			newEvent.close();
 		};
 		registrationButton.addEventHandler(ActionEvent.ACTION, registrationHandler);
@@ -357,11 +315,46 @@ public class Popup {
 		hboxStartTime.getChildren().addAll(startTimeLabel, startTimeTextField);
 		hboxAllotTime.getChildren().addAll(allotTimeLabel, allotTimeTextField);
 		hboxBottumSelect.getChildren().addAll(registrationButton, CancelButton);
-		vbox.getChildren().addAll(hboxDirectory, hboxFile, fileChangeButton, hboxStartTime, hboxAllotTime,
-				hboxBottumSelect);
+		vbox.getChildren().addAll(hboxDirectory, hboxFile, fileChangeButton, hboxStartTime,
+				hboxAllotTime, hboxBottumSelect);
 		newEvent.setScene(scene);
 		newEvent.initModality(Modality.APPLICATION_MODAL);
 		newEvent.show();
 	}
 
+	public void setSelectNum(int selectNum) {
+		this.selectNum = selectNum;
+	}
+
+	private final TextField startTimeTextField = new TextField() {
+		@Override
+		public void replaceText(int start, int end, String text) {
+			if (!text.matches("[a-z, A-Z]")) {
+				super.replaceText(start, end, text);
+			}
+		}
+
+		@Override
+		public void replaceSelection(String text) {
+			if (!text.matches("[a-z, A-Z]")) {
+				super.replaceSelection(text);
+			}
+		}
+	};
+
+	private final TextField allotTimeTextField = new TextField() {
+		@Override
+		public void replaceText(int start, int end, String text) {
+			if (!text.matches("[a-z, A-Z]")) {
+				super.replaceText(start, end, text);
+			}
+		}
+
+		@Override
+		public void replaceSelection(String text) {
+			if (!text.matches("[a-z, A-Z]")) {
+				super.replaceSelection(text);
+			}
+		}
+	};
 }
