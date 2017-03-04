@@ -40,14 +40,24 @@ import javafx.util.Duration;
 public class PlayerUi extends PlayerSystem {
 
 	private int panelwide = 1200 / 4 - 20;
+	
+	
+	public PlayerUi(){
+		
+	}
 
 	protected void createPlayerWindow() {
 		File file = getFileName();
 		if (!file.exists()) {
-			System.out.println("ファイルは存在しません");
-			return;
+			media = null;
+			mediaPlayer = null;
+			playerPanel.getChildren().addAll(new Label("ファイルは存在しません"));
+			playerPanel.setMinWidth(300);
+			playerPanel.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+					CornerRadii.EMPTY, new BorderWidths(10))));
+		}else {
+			createPlayerWindow(file);
 		}
-		createPlayerWindow(file);
 	}
 
 	protected void createPlayerWindow(File file) {
@@ -55,10 +65,8 @@ public class PlayerUi extends PlayerSystem {
 		mediaPlayer = new MediaPlayer(media);
 		fileName = new Label(String.valueOf(playIndex + 1) + "\t曲名 : " + file.getName());
 		fileName.setFont(Font.font(null, FontWeight.BLACK, 16));
-		playerPanel.getChildren().add(fileName);
-
+		
 		// スペクトル表示
-
 		if (getSuffix(file.toURI().toString()).equals("mp4")) {
 			MediaView mediaView = new MediaView(mediaPlayer);
 			mediaView.setFitWidth(panelwide);
@@ -73,7 +81,7 @@ public class PlayerUi extends PlayerSystem {
 		// ボリューム表示スライダ作成
 		playerPanel.getChildren().addAll(fileName,spectrum,createButton(mediaPlayer), createTimeSlider(),
 				createVolumeSlider(), createPlaylistButton(mediaPlayer));
-
+		
 		playerPanel.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID,
 				CornerRadii.EMPTY, new BorderWidths(10))));
 	}
@@ -438,8 +446,12 @@ public class PlayerUi extends PlayerSystem {
 
 	public void setPlayer(int playIndex) {
 		if (main.schedules.get(playIndex).getDirectry().isEmpty()) {
-		} else {
-			setPlayIndex(playIndex);
+		} else if(mediaPlayer == null){
+			this.playIndex = playIndex;
+			playerPanel.getChildren().clear();
+			createPlayerWindow();
+		}else {
+			this.playIndex = playIndex;
 			setPlayer();
 		}
 	}
@@ -453,8 +465,7 @@ public class PlayerUi extends PlayerSystem {
 				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
 				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
 				new ExtensionFilter("All Files", "*.*"));
-		File f = null;
-		f = fc.showOpenDialog(new Stage());
+		File f = fc.showOpenDialog(new Stage());
 		if (f != null) {
 			setPlayer(f);
 		}

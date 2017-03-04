@@ -11,9 +11,6 @@ public class Player extends PlayerUi {
 	Player(Main main) {
 		this.main = main;
 		createPlayerWindow();
-		// panel.setBorder(new Border(new BorderStroke(Color.GREEN,
-		// BorderStrokeStyle.SOLID,
-		// CornerRadii.EMPTY, new BorderWidths(10))));
 	}
 
 	public VBox getPlayerPanel() {

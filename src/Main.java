@@ -48,7 +48,6 @@ public class Main extends Application {
 	private Player media4 = new Player(this);
 
 	private Scene mainscene;
-
 	private Timecode timecode;
 
 	// private Player media1;
@@ -82,7 +81,7 @@ public class Main extends Application {
 		});
 		root.getChildren().add(tableNode);
 
-		timeTable.table.getSelectionModel().select(media1.getPlayIndex());
+//		timeTable.table.getSelectionModel().select(media1.getPlayIndex());
 		// timeTable.table.scrollTo(media1.getPlayIndex());
 
 		hbox1.getChildren().addAll(media1.getPlayerPanel(), media2.getPlayerPanel(), media3.getPlayerPanel(),
