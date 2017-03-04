@@ -59,7 +59,6 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage mainStage) {
-
 		// ディスプレイサイズを取得
 		VBox root = new VBox();
 		HBox hbox1 = new HBox();
@@ -68,13 +67,16 @@ public class Main extends Application {
 
 		root.getChildren().add(createHeadWline());
 		ContextMenu menu = popupMenu.createPopupMenu();
+		ContextMenu firstMenu = popupMenu.firstPopupMenu();//スケジュールが無い時用のポップアップメニュー
 		Node tableNode = timeTable.creatTimeTable(this);
 		tableNode.setOnMousePressed(e -> {
 			if (e.isSecondaryButtonDown()) {
-				if (getTimeTable().table.getSelectionModel().getSelectedIndex() >= 0) {
+				int selectNum = getTimeTable().table.getSelectionModel().getSelectedIndex();
+				popupMenu.setSelectNum(selectNum);
+				if (selectNum >= 0) {
 					menu.show(mainStage, e.getScreenX(), e.getScreenY());
 				}else {
-					
+					firstMenu.show(mainStage, e.getScreenX(), e.getScreenY());
 				}
 			}
 		});
