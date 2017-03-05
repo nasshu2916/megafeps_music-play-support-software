@@ -3,6 +3,7 @@ import java.io.File;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -19,7 +20,8 @@ public class PlayerSystem {
 	protected VBox playerPanel = new VBox();
 	protected Node spectrum = null; // スペクトル表示ノード
 	protected Slider volumeSlider;
-	
+	protected ToggleButton samplerButton;
+
 	protected int playerNumber;
 	protected int playIndex = 0;
 	protected Label fileName;

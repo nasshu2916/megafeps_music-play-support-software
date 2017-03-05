@@ -323,7 +323,7 @@ public class PlayerUi extends PlayerSystem {
 		repeatButton.setFocusTraversable(false);
 		ToggleButton x2speedButton = new ToggleButton("x2");
 		x2speedButton.setFocusTraversable(false);
-		ToggleButton samplerButton = new ToggleButton("ポン出し");
+		samplerButton = new ToggleButton("ポン出し");
 		samplerButton.setFocusTraversable(false);
 
 		root.getChildren().addAll(prevButton, nextButton, repeatButton, x2speedButton,
@@ -369,7 +369,7 @@ public class PlayerUi extends PlayerSystem {
 		return root;
 	}
 
-	private void pressNext() {
+	public void pressNext() {
 		do {
 			playIndex++;
 			if (playIndex >= main.schedules.size() - 1)
@@ -378,7 +378,7 @@ public class PlayerUi extends PlayerSystem {
 		setPlayer();
 	}
 
-	private void pressPrev() {
+	public void pressPrev() {
 		do {
 			playIndex--;
 			if (playIndex <= 0)
