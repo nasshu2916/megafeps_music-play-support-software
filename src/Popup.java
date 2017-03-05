@@ -63,6 +63,8 @@ public class Popup {
 		});
 		menu1_3.addEventHandler(ActionEvent.ACTION, e -> {
 			main.getMedia(1).setPlayer(selectNum);
+			// main.getTimeTable().table.getColumns().get(selectNum).setStyle("-fx-background-color:
+			// #983737");
 		});
 		menu1_4.addEventHandler(ActionEvent.ACTION, e -> {
 			main.getMedia(2).setPlayer(selectNum);
@@ -117,7 +119,8 @@ public class Popup {
 		fc.setTitle("ファイルを選択してください");
 		fc.getExtensionFilters().addAll(
 				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac", "*.mp4", "*.m4a",
-						"*.flv"), new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+						"*.flv"),
+				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
 				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
 				new ExtensionFilter("All Files", "*.*"));
 
@@ -178,22 +181,17 @@ public class Popup {
 			allotSecond = allotTime % 100;
 			allotMinute = allotTime / 100;
 
-			main.getSchedules().add(
-					setNum,
+			main.getSchedules().add(setNum,
 					new Schedule(directoryTextField.getText(), fileTextField.getText(), startHour,
 							startMinute, startSecond, allotMinute, allotSecond, ""));
-			main.getTimeTable().timeTableDatas.add(
-					setNum,
-					main.getTimeTable().setTimeTableData(
-							dformat.format(main.getTimeTable().table.getSelectionModel()
-									.getSelectedIndex() + 1),
-							directoryTextField.getText(),
-							fileTextField.getText(),
+			main.getTimeTable().timeTableDatas.add(setNum,
+					main.getTimeTable().setTimeTableData(dformat.format(setNum),
+							directoryTextField.getText(), fileTextField.getText(),
 							String.valueOf(startHour) + ":" + dformat.format(startMinute) + ":"
 									+ dformat.format(startSecond),
 							String.valueOf(allotMinute) + ":" + dformat.format(allotSecond)));
-			for (int i = main.getTimeTable().table.getSelectionModel()// 番号を修正
-					.getSelectedIndex(); i < main.getTimeTable().timeTableDatas.size(); i++) {
+			// 番号を修正
+			for (int i = setNum; i < main.getTimeTable().timeTableDatas.size(); i++) {
 				main.getTimeTable().timeTableDatas.get(i).setNumber(dformat.format(i + 1));
 			}
 			newEvent.close();
@@ -222,7 +220,8 @@ public class Popup {
 		fc.setTitle("ファイルを選択してください");
 		fc.getExtensionFilters().addAll(
 				new ExtensionFilter("support Files", "*.wav", "*.mp3", "*.aac", "*.mp4", "*.m4a",
-						"*.flv"), new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+						"*.flv"),
+				new ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
 				new ExtensionFilter("Video Files", "*.mp4", "*.m4a", "*.flv"),
 				new ExtensionFilter("All Files", "*.*"));
 
@@ -238,10 +237,10 @@ public class Popup {
 		Label directoryLabel = new Label("ディレクトリ\t");
 		Label fileLabel = new Label("ファイル名\t");
 
-		TextField directoryTextField = new TextField(main.getTimeTable().timeTableDatas.get(
-				selectNum).getElement2_1());
-		TextField fileTextField = new TextField(main.getTimeTable().timeTableDatas.get(selectNum)
-				.getElement2_2());
+		TextField directoryTextField = new TextField(
+				main.getTimeTable().timeTableDatas.get(selectNum).getElement2_1());
+		TextField fileTextField = new TextField(
+				main.getTimeTable().timeTableDatas.get(selectNum).getElement2_2());
 
 		Label startTimeLabel = new Label("開始時間\t");
 		Label allotTimeLabel = new Label("持ち時間\t");
@@ -286,17 +285,12 @@ public class Popup {
 			allotSecond = allotTime % 100;
 			allotMinute = allotTime / 100;
 
-			main.getSchedules().set(
-					selectNum,
+			main.getSchedules().set(selectNum,
 					new Schedule(directoryTextField.getText(), fileTextField.getText(), startHour,
 							startMinute, startSecond, allotMinute, allotSecond, ""));
-			main.getTimeTable().timeTableDatas.set(
-					selectNum,
-					main.getTimeTable().setTimeTableData(
-							dformat.format(main.getTimeTable().table.getSelectionModel()
-									.getSelectedIndex() + 1),
-							directoryTextField.getText(),
-							fileTextField.getText(),
+			main.getTimeTable().timeTableDatas.set(selectNum,
+					main.getTimeTable().setTimeTableData(dformat.format(selectNum + 1),
+							directoryTextField.getText(), fileTextField.getText(),
 							String.valueOf(startHour) + ":" + dformat.format(startMinute) + ":"
 									+ dformat.format(startSecond),
 							String.valueOf(allotMinute) + ":" + dformat.format(allotSecond)));

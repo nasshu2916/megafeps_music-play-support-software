@@ -10,6 +10,7 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -38,7 +39,8 @@ import javafx.stage.WindowEvent;
 public class Main extends Application {
 	private Popup popupMenu = new Popup(this);
 	public List<Schedule> schedules = new ArrayList<Schedule>();
-	private ReadFile readFile = new ReadFile(this);
+	private ReadFile readFile;
+	// private ReadFile readFile = new ReadFile(this);
 
 	private TimeTable timeTable = new TimeTable();
 
@@ -48,7 +50,6 @@ public class Main extends Application {
 	private Player media4 = new Player(this);
 
 	private Scene mainscene;
-
 	private Timecode timecode;
 
 	// private Player media1;
@@ -67,7 +68,7 @@ public class Main extends Application {
 
 		root.getChildren().add(createHeadWline());
 		ContextMenu menu = popupMenu.createPopupMenu();
-		ContextMenu firstMenu = popupMenu.firstPopupMenu();//スケジュールが無い時用のポップアップメニュー
+		ContextMenu firstMenu = popupMenu.firstPopupMenu();// スケジュールが無い時用のポップアップメニュー
 		Node tableNode = timeTable.creatTimeTable(this);
 		tableNode.setOnMousePressed(e -> {
 			if (e.isSecondaryButtonDown()) {
@@ -75,94 +76,19 @@ public class Main extends Application {
 				popupMenu.setSelectNum(selectNum);
 				if (selectNum >= 0) {
 					menu.show(mainStage, e.getScreenX(), e.getScreenY());
-				}else {
+				} else {
 					firstMenu.show(mainStage, e.getScreenX(), e.getScreenY());
 				}
 			}
 		});
 		root.getChildren().add(tableNode);
 
-		timeTable.table.getSelectionModel().select(media1.getPlayIndex());
+		// timeTable.table.getSelectionModel().select(media1.getPlayIndex());
 		// timeTable.table.scrollTo(media1.getPlayIndex());
 
-		hbox1.getChildren().addAll(media1.getPlayerPanel(), media2.getPlayerPanel(), media3.getPlayerPanel(),
-				media4.getPlayerPanel());
+		hbox1.getChildren().addAll(media1.getPlayerPanel(), media2.getPlayerPanel(),
+				media3.getPlayerPanel(), media4.getPlayerPanel());
 		root.getChildren().add(hbox1);
-
-		/* アクションイベント */
-		EventHandler<KeyEvent> sceneKeyFilter = (event) -> {
-			System.out.println(event);
-			// switch (event.getCode().toString()) {
-			// case "S":
-			// media1.mediaPlay();
-			// break;
-			// case "ENTER":
-			// media1.mediaPause();
-			// break;
-			// case "DOWN":
-			// media1.pressNext();
-			// break;
-			// case "UP":
-			// media1.pressPrev();
-			// break;
-			// case "SPACE":
-			// if (media1.getMediaPlayer().statusProperty().getValue() ==
-			// Status.PLAYING) {
-			// if (media1.getPlayerIndex() + 1 > getReadFile()
-			// .getMusicFiles().size() - 1) {
-			// media1.pressNext();
-			// } else {
-			// if (getReadFile().getMusicFiles()
-			// .get(media1.getPlayerIndex() + 1).getDirectry()
-			// .isEmpty()) {
-			// media1.pressNext();
-			// } else {
-			// // フェードアウト
-			// fadeOut = new Timer();
-			// fadeOut.schedule(new FadeOutTask(), 0, 10);
-			// try {
-			// Thread.sleep(1000);
-			// } catch (Exception e) {
-			// }
-			// System.out.println("next2");
-			// media1.pressNext();
-			// media1.mediaPlay();
-			// }
-			// }
-			// } else {
-			// if (getReadFile().getMusicFiles()
-			// .get(media1.getPlayerIndex()).getDirectry()
-			// .isEmpty()) {
-			// media1.addPlayerIndex();
-			// label2 = setItem(label2, media1.getPlayerIndex());
-			// }
-			// media1.mediaPlay();
-			// }
-			//
-			// break;
-			// case "DIGIT1":
-			// if (media1.samplerButton.isSelected()) {
-			// media1.mediaPlay();
-			// }
-			// break;
-			// case "DIGIT2":
-			// if (media2.samplerButton.isSelected()) {
-			// media2.mediaPlay();
-			// }
-			// break;
-			// case "DIGIT3":
-			// if (media3.samplerButton.isSelected()) {
-			// media3.mediaPlay();
-			// }
-			// break;
-			// case "DIGIT4":
-			// if (media4.samplerButton.isSelected()) {
-			// media4.mediaPlay();
-			// }
-			// break;
-			// }
-		};
-		root.addEventFilter(KeyEvent.KEY_PRESSED, sceneKeyFilter);
 
 		mainscene = new Scene(root, 1200, 800);
 
@@ -178,6 +104,13 @@ public class Main extends Application {
 		mainStage.show();
 		// media1.mediaPlay();
 		// media2.getMediaPlayer().setVolume(0.1);
+		/* アクションイベント */
+		EventHandler<KeyEvent> sceneKeyFilter = (event) -> {
+			System.out.println(event);
+			onKey(event);
+		};
+		mainStage.addEventFilter(KeyEvent.KEY_PRESSED, sceneKeyFilter);
+
 	}
 
 	private Node createHeadWline() {
@@ -298,22 +231,20 @@ public class Main extends Application {
 		menu1_3.addEventHandler(ActionEvent.ACTION, e -> {
 			System.out.println(menu1_3.getText());
 			Platform.exit();// 終了させる
-			});
+		});
 
 		// 開く
-		menu2_2.addEventHandler(
-				ActionEvent.ACTION,
-				e -> {
-					readFile = new ReadFile(this);
+		menu2_2.addEventHandler(ActionEvent.ACTION, e -> {
+			readFile = new ReadFile(this);
 
-					DecimalFormat dformat = new DecimalFormat("00");
+			DecimalFormat dformat = new DecimalFormat("00");
 
-					for (int i = 0; i < schedules.size(); i++) {
-						timeTable.timeTableDatas.add(timeTable.setTimeTableData(
-								dformat.format(i + 1), schedules.get(i)));
-					}
+			for (int i = 0; i < schedules.size(); i++) {
+				timeTable.timeTableDatas
+						.add(timeTable.setTimeTableData(dformat.format(i + 1), schedules.get(i)));
+			}
 
-				});
+		});
 
 		// 保存
 		menu2_3.addEventHandler(ActionEvent.ACTION, e -> {
@@ -397,5 +328,76 @@ public class Main extends Application {
 		readFile = null;
 		schedules.clear();
 		timeTable.timeTableDatas.clear();
+	}
+
+	private void onKey(KeyEvent event) {
+		switch (event.getCode().toString()) {
+		case "S":
+			media1.mediaPlay();
+			break;
+		case "ENTER":
+			media1.mediaPause();
+			break;
+		case "DOWN":
+			media1.pressNext();
+			break;
+		case "UP":
+			media1.pressPrev();
+			break;
+		case "SPACE":
+			// if (media1.getMediaPlayer().statusProperty().getValue() ==
+			// Status.PLAYING) {
+			// if (media1.getPlayerIndex() + 1 >
+			// getReadFile().getMusicFiles().size() - 1) {
+			// media1.pressNext();
+			// } else {
+			// if (getReadFile().getMusicFiles().get(media1.getPlayerIndex() +
+			// 1).getDirectry()
+			// .isEmpty()) {
+			// media1.pressNext();
+			// } else { //フェードアウト
+			// fadeOut = new Timer();
+			// fadeOut.schedule(new FadeOutTask(), 0, 10);
+			// try {
+			// Thread.sleep(1000);
+			// } catch (Exception e) {
+			// }
+			// System.out.println("next2");
+			// media1.pressNext();
+			// media1.mediaPlay();
+			// }
+			// }
+			// } else {
+			// if
+			// (getReadFile().getMusicFiles().get(media1.getPlayerIndex()).getDirectry()
+			// .isEmpty()) {
+			// media1.addPlayerIndex();
+			// label2 = setItem(label2, media1.getPlayerIndex());
+			// }
+			// media1.mediaPlay();
+			// }
+			// break;
+
+		case "DIGIT1":
+			if (media1.samplerButton.isSelected()) {
+				media1.mediaPlay();
+			}
+			break;
+		case "DIGIT2":
+			if (media2.samplerButton.isSelected()) {
+				media2.mediaPlay();
+			}
+			break;
+		case "DIGIT3":
+			if (media3.samplerButton.isSelected()) {
+				media3.mediaPlay();
+			}
+			break;
+		case "DIGIT4":
+			if (media4.samplerButton.isSelected()) {
+				media4.mediaPlay();
+			}
+			break;
+		}
 	}
 }

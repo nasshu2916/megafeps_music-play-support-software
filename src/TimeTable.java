@@ -44,7 +44,7 @@ public class TimeTable extends Time{
 		for (int i = 0; i < main.schedules.size(); i++) {
 			timeTableDatas.add(new TimeTableData(dformat.format(i + 1), main.schedules.get(i)));
 		}
-		
+
 		// データを登録
 		table.setItems(timeTableDatas);
 
@@ -58,11 +58,11 @@ public class TimeTable extends Time{
 
 		return new TimeTableData(number, directoryPath, fileName, StartTime, allottedTile);
 	}
-	
+
 	public TimeTableData setTimeTableData(String number, Schedule Schedule) {
 		return new TimeTableData(number, Schedule);
 	}
-	
+
 
 	/**
 	 * テーブル表示用のローカルクラス
@@ -85,7 +85,7 @@ public class TimeTable extends Time{
 			this.StartTime = StartTime;
 			this.allottedTime = allottedTile;
 		}
-		
+
 		public TimeTableData(Schedule schedule) {
 			number = "00";
 			directoryPath = schedule.getDirectry();
@@ -94,7 +94,7 @@ public class TimeTable extends Time{
 			allottedTime = schedule.getAllotTime().getStringTime();
 			remarks = schedule.getRemarks();
 		}
-		
+
 		public TimeTableData(String num,Schedule schedule) {
 			number = num;
 			directoryPath = schedule.getDirectry();
@@ -147,7 +147,7 @@ public class TimeTable extends Time{
 		public void setElement4(String time) {
 			this.allottedTime = time;
 		}
-		
+
 		public String getElement5() {
 			return remarks;
 		}

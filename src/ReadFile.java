@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -17,28 +16,19 @@ public class ReadFile {
 	ReadFile(Main main) {
 		try {
 			File f = null;
-			// ディレクトリ選択ダイアログを表示し、選択したファイルパスを取得
-			DirectoryChooser dc = new DirectoryChooser();
-			dc.setTitle("フォルダを選択してください");
-			f = dc.showDialog(new Stage());
-			if (f != null) {
-				directory = f.toString();
-			} else {
-				System.out.println("ファイルが選択されていません");
-			}
 
 			// ファイルを読み込む
-			programDataFile = new File(directory + "\\hogehoge.csv"); // 読み込み対象のCSVファイル
-
+			// 読み込み対象のCSVファイル
 			FileChooser fc = new FileChooser();
-			fc.setInitialDirectory(f);
 			fc.setTitle("台本を選択してください");
 			fc.getExtensionFilters().addAll(new ExtensionFilter("タイムテーブル", "*.csv"));
 
 			f = fc.showOpenDialog(new Stage());
 			if (f != null) {
 				programDataFile = f;
+				directory = f.getParent();
 				System.out.println(f);
+				System.out.println(directory);
 			} else {
 				System.out.println("台本が選択されていません");
 			}
