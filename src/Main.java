@@ -6,11 +6,12 @@ import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -27,6 +28,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -51,6 +53,7 @@ public class Main extends Application {
 
 	private Scene mainscene;
 	private Timecode timecode;
+	private Timer fadeOut;
 
 	// private Player media1;
 
@@ -83,9 +86,6 @@ public class Main extends Application {
 		});
 		root.getChildren().add(tableNode);
 
-		// timeTable.table.getSelectionModel().select(media1.getPlayIndex());
-		// timeTable.table.scrollTo(media1.getPlayIndex());
-
 		hbox1.getChildren().addAll(media1.getPlayerPanel(), media2.getPlayerPanel(),
 				media3.getPlayerPanel(), media4.getPlayerPanel());
 		root.getChildren().add(hbox1);
@@ -102,8 +102,6 @@ public class Main extends Application {
 			}
 		});
 		mainStage.show();
-		// media1.mediaPlay();
-		// media2.getMediaPlayer().setVolume(0.1);
 		/* アクションイベント */
 		EventHandler<KeyEvent> sceneKeyFilter = (event) -> {
 			System.out.println(event);
@@ -345,38 +343,34 @@ public class Main extends Application {
 			media1.pressPrev();
 			break;
 		case "SPACE":
-			// if (media1.getMediaPlayer().statusProperty().getValue() ==
-			// Status.PLAYING) {
-			// if (media1.getPlayerIndex() + 1 >
-			// getReadFile().getMusicFiles().size() - 1) {
-			// media1.pressNext();
-			// } else {
-			// if (getReadFile().getMusicFiles().get(media1.getPlayerIndex() +
-			// 1).getDirectry()
-			// .isEmpty()) {
-			// media1.pressNext();
-			// } else { //フェードアウト
-			// fadeOut = new Timer();
-			// fadeOut.schedule(new FadeOutTask(), 0, 10);
-			// try {
-			// Thread.sleep(1000);
-			// } catch (Exception e) {
-			// }
-			// System.out.println("next2");
-			// media1.pressNext();
-			// media1.mediaPlay();
-			// }
-			// }
-			// } else {
-			// if
-			// (getReadFile().getMusicFiles().get(media1.getPlayerIndex()).getDirectry()
-			// .isEmpty()) {
-			// media1.addPlayerIndex();
-			// label2 = setItem(label2, media1.getPlayerIndex());
-			// }
-			// media1.mediaPlay();
-			// }
-			// break;
+			// timeTable.table.getSelectionModel().select(media1.getPlayIndex());
+			// timeTable.table.scrollTo(media1.getPlayIndex());
+			if (media1.getMediaPlayer().statusProperty().getValue() == Status.PLAYING) {
+				if (media1.getPlayIndex() + 1 > schedules.size() - 1) {
+					media1.pressNext();
+				} else {
+					if (schedules.get(media1.getPlayIndex() + 1).getDirectry().isEmpty()) {
+						media1.pressNext();
+					} else { // フェードアウト
+						fadeOut = new Timer();
+						fadeOut.schedule(new FadeOutTask(), 0, 10);
+						try {
+							Thread.sleep(1000);
+						} catch (Exception e) {
+						}
+						System.out.println("next2");
+						media1.pressNext();
+						media1.mediaPlay();
+					}
+				}
+			} else {
+				if (schedules.get(media1.getPlayIndex()).getDirectry().isEmpty()) {
+					media1.setPlayIndex(media1.getPlayIndex() + 1);
+					// label2 = setItem(label2, media1.getPlayIndex());
+				}
+				media1.mediaPlay();
+			}
+			break;
 
 		case "DIGIT1":
 			if (media1.samplerButton.isSelected()) {
@@ -398,6 +392,19 @@ public class Main extends Application {
 				media4.mediaPlay();
 			}
 			break;
+		}
+	}
+
+	class FadeOutTask extends TimerTask {
+		double volume = 1.000;
+
+		public void run() {
+			volume -= 0.010;
+			if (volume < 0.050) {
+				fadeOut.cancel();
+			} else {
+				media1.getMediaPlayer().setVolume(volume);
+			}
 		}
 	}
 }

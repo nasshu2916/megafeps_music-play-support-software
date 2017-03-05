@@ -71,4 +71,10 @@ public class PlayerSystem {
 		return playIndex;
 	}
 
+	public MediaPlayer getMediaPlayer() {
+		return mediaPlayer;
+	}
+	
+
+
 }
