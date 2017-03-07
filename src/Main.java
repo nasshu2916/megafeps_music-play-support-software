@@ -380,38 +380,39 @@ public class Main extends Application {
 			if (nowIndex != null && media1.getMediaPlayer() != null) {
 				if (nowIndex + 1 < schedules.size()) {
 					nowIndex++;
-				}
-				changeScheduleItem();
-
-				if (media1.getMediaPlayer().statusProperty().getValue() == Status.PLAYING) {
-					if (nowIndex > schedules.size() - 1) {
-						media1.pressNext();
-					} else {
-						if (schedules.get(nowIndex + 1).getDirectry().isEmpty()) {
-							media1.pressNext();
+					changeScheduleItem();
+					if (media1.getMediaPlayer().statusProperty().getValue() == Status.PLAYING) {
+						// 再生中の場合
+						if (schedules.get(nowIndex).getDirectry().equals("")) {
+							// 連続で曲が登録されていない場合
+							// カットオフして次の曲をセット
+							media1.setPlayer(nowIndex);
 						} else {
+							// フェードアウトして次の曲をカットイン
 							// フェードアウト
 							fadeOut = new Timer();
 							fadeOut.schedule(new FadeOutTask(), 0, 10);
 							try {
 								Thread.sleep(1000);
 							} catch (Exception e) {
+								// TODO: handle exception
 							}
-							System.out.println("フェードアウト 終了");
-							media1.pressNext();
+							System.out.println("フェートアウト終了");
+							media1.setPlayer(nowIndex);
+							media1.mediaPlay();
+						}
+					} else {
+						// 再生されていない場合
+						// 次の曲を登録
+						media1.setPlayer(nowIndex);
+						if (!schedules.get(nowIndex).equals("")) {
 							media1.mediaPlay();
 						}
 					}
 				} else {
-					if (schedules.get(nowIndex).getDirectry().isEmpty()) {
-						if (nowIndex >= schedules.size() - 1) {
-							media1.setPlayIndex(0);
-						} else {
-							media1.setPlayIndex(nowIndex + 1);
-						}
-						// label2 = setItem(label2, nowIndex);
+					if (media1.getMediaPlayer() != null) {
+						media1.mediaStop();
 					}
-					media1.mediaPlay();
 				}
 			}
 
