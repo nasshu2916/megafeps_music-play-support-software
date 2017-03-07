@@ -449,6 +449,7 @@ public class PlayerUi extends PlayerSystem {
 
 	public void setPlayer(int playIndex) {
 		if (main.schedules.get(playIndex).getDirectry().isEmpty()) {
+			//ファイルでない時
 		} else if (mediaPlayer == null) {
 			this.playIndex = playIndex;
 			playerPanel.getChildren().clear();

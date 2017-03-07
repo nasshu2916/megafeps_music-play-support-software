@@ -51,11 +51,12 @@ public class Popup {
 		MenuItem menu3_2 = new MenuItem("選択項目の後に追加");
 		MenuItem menu4 = new MenuItem("イベントの削除");
 		MenuItem menu5 = new MenuItem("イベントの変更");
+		MenuItem menu6 = new MenuItem("この項目にセットする");
 		// menu1.setDisable(true);
 
 		menu1.getItems().addAll(menu1_2, menu1_3, menu1_4, menu1_5);
 		menu3.getItems().addAll(menu3_1, menu3_2);
-		menu.getItems().addAll(menu1, menu2, menu3, menu4, menu5);
+		menu.getItems().addAll(menu1, menu2, menu3, menu4, menu5, menu6);
 
 		// イベントハンドラはMenuItemに設定
 		menu1_2.addEventHandler(ActionEvent.ACTION, e -> {
@@ -91,6 +92,12 @@ public class Popup {
 
 		menu5.addEventHandler(ActionEvent.ACTION, e -> {
 			chengeEventData(selectNum);
+		});
+
+		menu6.addEventHandler(ActionEvent.ACTION, e -> {
+			main.getMedia(0).setPlayer(selectNum);
+			main.nowIndex = selectNum - 1;
+			main.setScheduleItem();
 		});
 		return menu;
 	}

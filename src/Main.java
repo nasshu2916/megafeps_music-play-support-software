@@ -25,7 +25,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.MediaPlayer.Status;
@@ -54,7 +54,14 @@ public class Main extends Application {
 	private Scene mainscene;
 	private Timecode timecode;
 	private Timer fadeOut;
+	public Integer nowIndex = null;
 
+	Label nowItemText = new Label("現項目 : ");
+	Label nowItem = new Label("No Schedule");
+	Label nowItemTime = new Label();
+	Label nextItemTest = new Label("次項目 : ");
+	Label nextItem = new Label("No Schedule");
+	Label nextItemTime = new Label();
 	// private Player media1;
 
 	public static void main(String[] args) {
@@ -113,16 +120,42 @@ public class Main extends Application {
 
 	private Node createHeadWline() {
 
-		AnchorPane pane = new AnchorPane();
+		HBox pane = new HBox();
 
 		Label programTime = new Label("TIME");
 		programTime.setFont(Font.font(null, FontWeight.BLACK, 64));
 		programTime.setTextFill(Color.GREEN);
+		programTime.setMinSize(325, 70);
+
 		timecode = new Timecode(programTime);
 
-		pane.getChildren().addAll(programTime);
+		pane.getChildren().addAll(programTime, programScheduleItem());
 
 		return pane;
+	}
+
+	private Node programScheduleItem() {
+		GridPane programSchedule = new GridPane();
+
+		nowItemText.setFont(Font.font(null, FontWeight.BLACK, 28));
+		programSchedule.add(nowItemText, 0, 0);
+
+		nowItem.setFont(Font.font(null, FontWeight.BLACK, 28));
+		programSchedule.add(nowItem, 1, 0);
+
+		nowItemTime.setFont(Font.font(null, FontWeight.BLACK, 28));
+		programSchedule.add(nowItemTime, 2, 0);
+
+		nextItemTest.setFont(Font.font(null, FontWeight.BLACK, 28));
+		programSchedule.add(nextItemTest, 0, 1);
+
+		nextItem.setFont(Font.font(null, FontWeight.BLACK, 28));
+		programSchedule.add(nextItem, 1, 1);
+
+		nextItemTime.setFont(Font.font(null, FontWeight.BLACK, 28));
+		programSchedule.add(nextItemTime, 2, 1);
+
+		return programSchedule;
 	}
 
 	public Player getMedia(int num) {
@@ -343,33 +376,45 @@ public class Main extends Application {
 			media1.pressPrev();
 			break;
 		case "SPACE":
-			// timeTable.table.getSelectionModel().select(media1.getPlayIndex());
-			// timeTable.table.scrollTo(media1.getPlayIndex());
-			if (media1.getMediaPlayer().statusProperty().getValue() == Status.PLAYING) {
-				if (media1.getPlayIndex() + 1 > schedules.size() - 1) {
-					media1.pressNext();
-				} else {
-					if (schedules.get(media1.getPlayIndex() + 1).getDirectry().isEmpty()) {
+			System.out.println(nowIndex);
+			if (nowIndex != null && media1.getMediaPlayer() != null) {
+				if (nowIndex + 1 < schedules.size()) {
+					nowIndex++;
+				}
+				changeScheduleItem();
+
+				if (media1.getMediaPlayer().statusProperty().getValue() == Status.PLAYING) {
+					if (nowIndex > schedules.size() - 1) {
 						media1.pressNext();
-					} else { // フェードアウト
-						fadeOut = new Timer();
-						fadeOut.schedule(new FadeOutTask(), 0, 10);
-						try {
-							Thread.sleep(1000);
-						} catch (Exception e) {
+					} else {
+						if (schedules.get(nowIndex + 1).getDirectry().isEmpty()) {
+							media1.pressNext();
+						} else {
+							// フェードアウト
+							fadeOut = new Timer();
+							fadeOut.schedule(new FadeOutTask(), 0, 10);
+							try {
+								Thread.sleep(1000);
+							} catch (Exception e) {
+							}
+							System.out.println("フェードアウト 終了");
+							media1.pressNext();
+							media1.mediaPlay();
 						}
-						System.out.println("next2");
-						media1.pressNext();
-						media1.mediaPlay();
 					}
+				} else {
+					if (schedules.get(nowIndex).getDirectry().isEmpty()) {
+						if (nowIndex >= schedules.size() - 1) {
+							media1.setPlayIndex(0);
+						} else {
+							media1.setPlayIndex(nowIndex + 1);
+						}
+						// label2 = setItem(label2, nowIndex);
+					}
+					media1.mediaPlay();
 				}
-			} else {
-				if (schedules.get(media1.getPlayIndex()).getDirectry().isEmpty()) {
-					media1.setPlayIndex(media1.getPlayIndex() + 1);
-					// label2 = setItem(label2, media1.getPlayIndex());
-				}
-				media1.mediaPlay();
 			}
+
 			break;
 
 		case "DIGIT1":
@@ -406,5 +451,39 @@ public class Main extends Application {
 				media1.getMediaPlayer().setVolume(volume);
 			}
 		}
+	}
+
+	public void changeScheduleItem() {
+		if (nowIndex != null) {
+			if (nowIndex > 0) {
+				timeTable.table.getSelectionModel().select(nowIndex);
+				timeTable.table.scrollTo(nowIndex);
+				nowItem.setText(schedules.get(nowIndex).getFileName());
+				nowItemTime.setText(
+						"(" + schedules.get(nowIndex).getAllotTime().getStringTime() + ")");
+
+			}
+			if (nowIndex + 1 < schedules.size()) {
+				nextItem.setText(schedules.get(nowIndex + 1).getFileName());
+				nextItemTime.setText(
+						"(" + schedules.get(nowIndex + 1).getAllotTime().getStringTime() + ")");
+			} else {
+				nextItem.setText("");
+				nextItemTime.setText("");
+			}
+		} else {
+			nowItem.setText("No Schedule");
+			nowItemTime.setText("");
+			nextItem.setText("");
+			nextItemTime.setText("No Schedule");
+		}
+	}
+
+	public void setScheduleItem() {
+		timeTable.table.getSelectionModel().select(nowIndex + 1);
+		timeTable.table.scrollTo(nowIndex + 1);
+		nextItem.setText(schedules.get(nowIndex + 1).getFileName());
+		nextItemTime
+				.setText("(" + schedules.get(nowIndex + 1).getAllotTime().getStringTime() + ")");
 	}
 }
