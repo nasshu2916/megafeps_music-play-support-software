@@ -34,8 +34,8 @@ public class ReadFile {
 			}
 
 			// SJISを指定
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(
-					programDataFile), "SJIS"));
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(new FileInputStream(programDataFile), "SJIS"));
 
 			// 読み込んだファイルを1行ずつ処理する
 			String s;
@@ -44,13 +44,13 @@ public class ReadFile {
 				String[] fruit = s.split(",", -1);
 				if (fruit[0].equals("")) {
 					main.schedules.add(new Schedule("", fruit[1], Integer.parseInt(fruit[2]),
-							Integer.parseInt(fruit[3]), Integer.parseInt(fruit[4]), Integer
-									.parseInt(fruit[5]), Integer.parseInt(fruit[6]), fruit[7]));
+							Integer.parseInt(fruit[3]), Integer.parseInt(fruit[4]),
+							Integer.parseInt(fruit[5]), Integer.parseInt(fruit[6]), fruit[7]));
 				} else {
-					main.schedules.add(new Schedule(directory + "/" + fruit[0], fruit[1], Integer
-							.parseInt(fruit[2]), Integer.parseInt(fruit[3]), Integer
-							.parseInt(fruit[4]), Integer.parseInt(fruit[5]), Integer
-							.parseInt(fruit[6]), fruit[7]));
+					main.schedules.add(new Schedule(directory + "/" + fruit[0], fruit[1],
+							Integer.parseInt(fruit[2]), Integer.parseInt(fruit[3]),
+							Integer.parseInt(fruit[4]), Integer.parseInt(fruit[5]),
+							Integer.parseInt(fruit[6]), fruit[7]));
 				}
 
 			}
@@ -62,6 +62,9 @@ public class ReadFile {
 			ex.printStackTrace();
 
 		}
+
+		// main.nowIndex = 0;
+		// main.changeScheduleItem();
 	}
 
 	public String getDirectory() {
