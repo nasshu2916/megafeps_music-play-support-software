@@ -3,11 +3,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.text.DecimalFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import org.apache.commons.net.ntp.NTPUDPClient;
+import org.apache.commons.net.ntp.TimeInfo;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -305,43 +312,78 @@ public class Main extends Application {
 
 	private void setClockWindow() {
 		// 新しいウインドウを生成
-		Label correctionBeforTime = new Label("befor time");
-		Label correctionAfterTime = new Label("After time");
-		new Timecode(correctionBeforTime, "補正前 : ");
-		Timecode correctionTimecode = new Timecode(correctionAfterTime, "補正後 : ",
-				timecode.getCorrectionTime());
-		correctionBeforTime.setFont(Font.font(null, FontWeight.BLACK, 24));
-		correctionBeforTime.setTextFill(Color.GREEN);
+		try {
+			Label correctionBeforTime = new Label("befor time");
+			Label correctionAfterTime = new Label("After time");
+			Label ntpTime = new Label("ntp time");
+			new Timecode(correctionBeforTime, "補正前 : ");
 
-		correctionAfterTime.setFont(Font.font(null, FontWeight.BLACK, 24));
-		correctionAfterTime.setTextFill(Color.RED);
+			correctionBeforTime.setFont(Font.font(null, FontWeight.BLACK, 24));
+			correctionBeforTime.setTextFill(Color.GREEN);
+			Timecode correctionTimecode = new Timecode(correctionAfterTime, "補正後 : ",
+					timecode.getCorrectionTime());
+			correctionAfterTime.setFont(Font.font(null, FontWeight.BLACK, 24));
+			correctionAfterTime.setTextFill(Color.RED);
 
-		Stage newStage = new Stage();
-		newStage.setTitle("時計合わせ");
-		// 新しいウインドウ内に配置するコンテンツを生成
-		HBox hbox = new HBox();
-		VBox vbox = new VBox();
-		Label correctionTimeLabel = new Label("調整時間\n(ミリ秒)");
+			NTPUDPClient ntp = new NTPUDPClient();
+			ntp.open();
+			String ntphost = "ntp.nict.jp";
+			InetAddress inet = InetAddress.getByName(ntphost);
+			TimeInfo time = ntp.getTime(inet);
+			ntp.close();
+			LocalDateTime localDt = LocalDateTime
+					.ofInstant(Instant.ofEpochMilli(time.getReturnTime()), ZoneId.systemDefault());
+			System.out.println(localDt.getNano() / 100000);
+			System.out.println(localDt);
+			long shiftTime = time.getReturnTime() - System.currentTimeMillis();
+			System.out.println("ntpサーバーとのズレ" + shiftTime);
+			new Timecode(ntpTime, "NTP     : ", (int) shiftTime);
 
-		TextField textField = new TextField(String.valueOf(timecode.getCorrectionTime()));
+			ntpTime.setFont(Font.font(null, FontWeight.BLACK, 24));
+			ntpTime.setTextFill(Color.BLACK);
 
-		Button registrationButton = new Button("登録");
-		registrationButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
-				new EventHandler<MouseEvent>() {
-					public void handle(MouseEvent e) {
-						timecode.setCorrectionTime(Integer.parseInt(textField.getText()));
-						correctionTimecode.setCorrectionTime(Integer.parseInt(textField.getText()));
-					}
-				});
+			Stage newStage = new Stage();
+			newStage.setTitle("時計合わせ");
+			// 新しいウインドウ内に配置するコンテンツを生成
+			HBox hbox = new HBox();
+			VBox vbox = new VBox();
+			Label correctionTimeLabel = new Label("調整時間\n(ミリ秒)");
 
-		hbox.getChildren().addAll(correctionTimeLabel, textField, registrationButton);
-		vbox.getChildren().addAll(hbox, correctionBeforTime, correctionAfterTime);
-		Scene scene = new Scene(vbox, 250, 100);
-		newStage.initModality(Modality.APPLICATION_MODAL);
-		newStage.setScene(scene);
+			TextField textField = new TextField(String.valueOf(timecode.getCorrectionTime()));
 
-		// 新しいウインドウを表示
-		newStage.show();
+			Button registrationButton = new Button("登録");
+			registrationButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
+					new EventHandler<MouseEvent>() {
+						public void handle(MouseEvent e) {
+							timecode.setCorrectionTime(Integer.parseInt(textField.getText()));
+							correctionTimecode
+									.setCorrectionTime(Integer.parseInt(textField.getText()));
+
+						}
+					});
+
+			Button ntpRegistrationButton = new Button("NTPサーバーの情報を登録");
+			ntpRegistrationButton.addEventHandler(MouseEvent.MOUSE_CLICKED,
+					new EventHandler<MouseEvent>() {
+						public void handle(MouseEvent e) {
+							timecode.setCorrectionTime((int) shiftTime);
+							correctionTimecode.setCorrectionTime((int) shiftTime);
+							textField.setText(String.valueOf(shiftTime));
+						}
+					});
+
+			hbox.getChildren().addAll(correctionTimeLabel, textField, registrationButton);
+			vbox.getChildren().addAll(hbox, correctionBeforTime, correctionAfterTime, ntpTime,
+					ntpRegistrationButton, new Label("NTPサーバーとのズレ  " + shiftTime + "　ミリ秒"));
+			Scene scene = new Scene(vbox, 250, 200);
+			newStage.initModality(Modality.APPLICATION_MODAL);
+			newStage.setScene(scene);
+
+			// 新しいウインドウを表示
+			newStage.show();
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
 	}
 
 	private void saveAsFile() {
